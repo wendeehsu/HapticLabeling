@@ -1,6 +1,8 @@
 ﻿using HapticLabeling.Model;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +13,8 @@ namespace HapticLabeling.ViewModel
 {
     public class MainPageViewModel : Observable
     {
+        public List<Event> Events = new List<Event>();
+
         public async Task<StorageFile> UploadVideo()
         {
             var openPicker = new FileOpenPicker
@@ -48,6 +52,15 @@ namespace HapticLabeling.ViewModel
             openPicker.FileTypeFilter.Add(".txt");
             var file = await openPicker.PickSingleFileAsync();
             return file;
+        }
+
+        public async void SetEvents(StorageFile file)
+        {
+            string text = await Windows.Storage.FileIO.ReadTextAsync(file);
+            Events = JsonConvert.DeserializeObject<List<Event>>(text);
+
+            // TODO: set events.
+            Debug.WriteLine(Events.Count);
         }
     }
 }

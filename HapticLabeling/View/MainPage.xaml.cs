@@ -35,7 +35,7 @@ namespace HapticLabeling
                 var _mediaPlayer = new MediaPlayer();
                 _mediaPlayer.Source = _mediaSource;
                 _mediaPlayer.Play();
-                media.SetMediaPlayer(_mediaPlayer);
+                videoPlayer.SetMediaPlayer(_mediaPlayer);
             }
         }
 
@@ -48,7 +48,7 @@ namespace HapticLabeling
                 var _mediaPlayer = new MediaPlayer();
                 _mediaPlayer.Source = _mediaSource;
                 _mediaPlayer.Play();
-                media.SetMediaPlayer(_mediaPlayer);
+                audioPlayer.SetMediaPlayer(_mediaPlayer);
             }
         }
 
@@ -57,7 +57,7 @@ namespace HapticLabeling
             var actionFile = await ViewModel.UploadAction();
             if (!(actionFile is null))
             {
-                // TODO: decode action
+                ViewModel.SetEvents(actionFile);
             }
         }
     }

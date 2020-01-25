@@ -6,7 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    Background="White">
     <Page.Resources>
         <Style x:Key="ChannelIcon" TargetType="TextBlock">
             <Setter Property="FontSize" Value="30" />
@@ -19,7 +19,7 @@
             <Setter Property="HorizontalAlignment" Value="Center" />
         </Style>
     </Page.Resources>
-    <Grid>
+    <Grid Background="LightGray">
         <Grid.RowDefinitions>
             <RowDefinition Height="6*"/>
             <RowDefinition Height="*" />
@@ -32,10 +32,10 @@
             <ColumnDefinition Width="80" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <MediaPlayerElement
-            Grid.Row="0"
-            Grid.ColumnSpan="3"
-            x:Name="media" />
+        <Grid Grid.Row="0" Grid.ColumnSpan="3" Background="GhostWhite">
+            <MediaPlayerElement x:Name="audioPlayer" />
+            <MediaPlayerElement x:Name="videoPlayer" />
+        </Grid>
         <TextBlock
             Grid.Column="0"
             Grid.Row="1"
