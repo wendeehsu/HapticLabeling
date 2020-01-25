@@ -1,0 +1,87 @@
+﻿<Page
+    x:Class="HapticLabeling.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:HapticLabeling"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Page.Resources>
+        <Style x:Key="ChannelIcon" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="30" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="FontFamily" Value="Segoe MDL2 Assets" />
+        </Style>
+        <Style x:Key="UploadBtn" TargetType="Button">
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+        </Style>
+    </Page.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="6*"/>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="80" />
+            <ColumnDefinition Width="80" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <MediaPlayerElement
+            Grid.Row="0"
+            Grid.ColumnSpan="3"
+            x:Name="media" />
+        <TextBlock
+            Grid.Column="0"
+            Grid.Row="1"
+            Text="&#xE714;"
+            Style="{StaticResource ChannelIcon}" />
+        <Button
+            Grid.Column="1"
+            Grid.Row="1"
+            Style="{StaticResource UploadBtn}"
+            Click="UploadVideo_Click">
+            <Button.Content>
+               <TextBlock Text="&#xED25;" FontFamily="Segoe MDL2 Assets"/>
+            </Button.Content>
+        </Button>
+        <TextBlock
+            Grid.Column="0"
+            Grid.Row="2"
+            Text="&#xEC4F;"
+            Style="{StaticResource ChannelIcon}" />
+        <Button
+            Grid.Column="1"
+            Grid.Row="2"
+            Style="{StaticResource UploadBtn}"
+            Click="UploadAudio_Click">
+            <Button.Content>
+                <TextBlock Text="&#xED25;" FontFamily="Segoe MDL2 Assets"/>
+            </Button.Content>
+        </Button>
+        <TextBlock
+            Grid.Column="0"
+            Grid.Row="3"
+            Text="&#xE759;"
+            Style="{StaticResource ChannelIcon}" />
+        <Button
+            Grid.Column="1"
+            Grid.Row="3"
+            Style="{StaticResource UploadBtn}"
+            Click="UploadAction_Click">
+            <Button.Content>
+                <TextBlock Text="&#xED25;" FontFamily="Segoe MDL2 Assets"/>
+            </Button.Content>
+        </Button>
+        <TextBlock
+            Grid.Column="0"
+            Grid.Row="4"
+            Text="&#xEB8A;"
+            Style="{StaticResource ChannelIcon}" />
+    </Grid>
+</Page>
