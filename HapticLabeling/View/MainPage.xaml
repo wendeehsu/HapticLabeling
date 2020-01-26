@@ -18,6 +18,11 @@
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="HorizontalAlignment" Value="Center" />
         </Style>
+        <Style x:Key="TimeLineSlider" TargetType="Slider">
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="30,0" />
+            <Setter Property="Minimum" Value="0" />
+        </Style>
     </Page.Resources>
     <Grid Background="LightGray">
         <Grid.RowDefinitions>
@@ -50,6 +55,13 @@
                <TextBlock Text="&#xED25;" FontFamily="Segoe MDL2 Assets"/>
             </Button.Content>
         </Button>
+        <Slider
+            Grid.Column="2"
+            Grid.Row="1"
+            Value="{x:Bind ViewModel.MediaPosition, Mode=OneWay}"
+            ValueChanged="Slider_ValueChanged"
+            Maximum="{x:Bind ViewModel.MediaLength, Mode=OneWay}"
+            Style="{StaticResource TimeLineSlider}" />
         <TextBlock
             Grid.Column="0"
             Grid.Row="2"
@@ -64,6 +76,13 @@
                 <TextBlock Text="&#xED25;" FontFamily="Segoe MDL2 Assets"/>
             </Button.Content>
         </Button>
+        <Slider
+            Grid.Column="2"
+            Grid.Row="2"
+            Value="{x:Bind ViewModel.MediaPosition, Mode=OneWay}"
+            ValueChanged="Slider_ValueChanged"
+            Maximum="{x:Bind ViewModel.MediaLength, Mode=OneWay}"
+            Style="{StaticResource TimeLineSlider}" />
         <TextBlock
             Grid.Column="0"
             Grid.Row="3"

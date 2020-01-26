@@ -28,36 +28,51 @@ namespace HapticLabeling
 
         private async void UploadVideo_Click(object sender, RoutedEventArgs e)
         {
-            var videoFile = await ViewModel.UploadVideo();
-            if (!(videoFile is null))
+            await ViewModel.UploadVideo();
+            if (ViewModel.VideoPlayer.Source != null)
             {
-                var _mediaSource = MediaSource.CreateFromStorageFile(videoFile);
-                var _mediaPlayer = new MediaPlayer();
-                _mediaPlayer.Source = _mediaSource;
-                _mediaPlayer.Play();
-                videoPlayer.SetMediaPlayer(_mediaPlayer);
+                videoPlayer.SetMediaPlayer(ViewModel.VideoPlayer);
             }
         }
 
         private async void UploadAudio_Click(object sender, RoutedEventArgs e)
         {
-            var audioFile = await ViewModel.UploadAudio();
-            if (!(audioFile is null))
+            await ViewModel.UploadAudio();
+            if (ViewModel.AudioPlayer.Source != null)
             {
-                var _mediaSource = MediaSource.CreateFromStorageFile(audioFile);
-                var _mediaPlayer = new MediaPlayer();
-                _mediaPlayer.Source = _mediaSource;
-                _mediaPlayer.Play();
-                audioPlayer.SetMediaPlayer(_mediaPlayer);
+                audioPlayer.SetMediaPlayer(ViewModel.AudioPlayer);
+                StartMedia();
             }
         }
 
         private async void UploadAction_Click(object sender, RoutedEventArgs e)
         {
             var actionFile = await ViewModel.UploadAction();
-            if (!(actionFile is null))
+            if (actionFile != null)
             {
                 ViewModel.SetEvents(actionFile);
+                StartMedia();
+            }
+        }
+
+        private void Slider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+        {
+            ViewModel.SetMediaPosition(e.NewValue);
+            StartMedia();
+        }
+
+        private void StartMedia()
+        {
+            if (ViewModel.VideoPlayer.Source != null)
+            {
+                ViewModel.VideoPlayer.Play();
+                videoPlayer.SetMediaPlayer(ViewModel.VideoPlayer);
+            }
+
+            if (ViewModel.AudioPlayer.Source != null)
+            {
+                ViewModel.AudioPlayer.Play();
+                audioPlayer.SetMediaPlayer(ViewModel.AudioPlayer);
             }
         }
     }

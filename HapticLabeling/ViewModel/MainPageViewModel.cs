@@ -3,19 +3,41 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using Windows.Media.Core;
+using Windows.Media.Playback;
 using Windows.Storage;
 using Windows.Storage.Pickers;
+using Windows.UI.Xaml;
 
 namespace HapticLabeling.ViewModel
 {
     public class MainPageViewModel : Observable
     {
         public List<Event> Events = new List<Event>();
+        public MediaPlayer VideoPlayer = new MediaPlayer();
+        public MediaPlayer AudioPlayer = new MediaPlayer();
 
-        public async Task<StorageFile> UploadVideo()
+        private double _mediaLength;
+        public double MediaLength
+        {
+            get => _mediaLength;
+            set => Set(ref _mediaLength, value);
+        }
+
+        private double _mediaPosition;
+        public double MediaPosition
+        {
+            get => _mediaPosition;
+            set => Set(ref _mediaPosition, value);
+        }
+
+        public void Init()
+        {
+           // TODO: Init.
+        }
+
+        public async Task UploadVideo()
         {
             var openPicker = new FileOpenPicker
             {
@@ -25,11 +47,23 @@ namespace HapticLabeling.ViewModel
             openPicker.FileTypeFilter.Add(".mp4");
             openPicker.FileTypeFilter.Add(".mov");
             openPicker.FileTypeFilter.Add(".wmv");
+        
             var file = await openPicker.PickSingleFileAsync();
-            return file;
+            if (!(file is null))
+            {
+                var _mediaSource = MediaSource.CreateFromStorageFile(file);
+                Windows.Storage.FileProperties.VideoProperties videoProperties = await file.Properties.GetVideoPropertiesAsync();
+                Duration videoDuration = videoProperties.Duration;
+                var length = videoDuration.TimeSpan.TotalMilliseconds;
+                if (length > MediaLength)
+                {
+                    MediaLength = length;
+                }
+                VideoPlayer.Source = _mediaSource;
+            }
         }
 
-        public async Task<StorageFile> UploadAudio()
+        public async Task UploadAudio()
         {
             var openPicker = new FileOpenPicker
             {
@@ -37,8 +71,20 @@ namespace HapticLabeling.ViewModel
                 SuggestedStartLocation = PickerLocationId.PicturesLibrary
             };
             openPicker.FileTypeFilter.Add(".mp3");
+
             var file = await openPicker.PickSingleFileAsync();
-            return file;
+            if (!(file is null))
+            {
+                var _mediaSource = MediaSource.CreateFromStorageFile(file);
+                Windows.Storage.FileProperties.VideoProperties audioProperties = await file.Properties.GetVideoPropertiesAsync();
+                Duration audioDuration = audioProperties.Duration;
+                var length = audioDuration.TimeSpan.TotalMilliseconds;
+                if (length > MediaLength)
+                {
+                    MediaLength = length;
+                }
+                AudioPlayer.Source = _mediaSource;
+            }
         }
 
         public async Task<StorageFile> UploadAction()
@@ -56,11 +102,18 @@ namespace HapticLabeling.ViewModel
 
         public async void SetEvents(StorageFile file)
         {
-            string text = await Windows.Storage.FileIO.ReadTextAsync(file);
+            string text = await FileIO.ReadTextAsync(file);
             Events = JsonConvert.DeserializeObject<List<Event>>(text);
 
             // TODO: set events.
             Debug.WriteLine(Events.Count);
+        }
+
+        public void SetMediaPosition(double position)
+        {
+            MediaPosition = position;
+            VideoPlayer.PlaybackSession.Position = TimeSpan.FromMilliseconds(position);
+            AudioPlayer.PlaybackSession.Position = TimeSpan.FromMilliseconds(position);
         }
     }
 }
