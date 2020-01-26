@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using Windows.Media;
 using Windows.Media.Core;
 using Windows.Media.Playback;
 using Windows.Storage;
@@ -17,6 +18,7 @@ namespace HapticLabeling.ViewModel
         public List<Event> Events = new List<Event>();
         public MediaPlayer VideoPlayer = new MediaPlayer();
         public MediaPlayer AudioPlayer = new MediaPlayer();
+        public MediaTimelineController MediaTimelineController = null;
 
         private double _mediaLength;
         public double MediaLength
@@ -32,9 +34,21 @@ namespace HapticLabeling.ViewModel
             set => Set(ref _mediaPosition, value);
         }
 
+        private bool _showPauseBtn;
+        public bool ShowPauseBtn
+        {
+            get => _showPauseBtn;
+            set => Set(ref _showPauseBtn, value);
+        }
+
         public void Init()
         {
-           // TODO: Init.
+            MediaTimelineController = new MediaTimelineController();
+            VideoPlayer.CommandManager.IsEnabled = false;
+            VideoPlayer.TimelineController = MediaTimelineController;
+
+            AudioPlayer.CommandManager.IsEnabled = false;
+            AudioPlayer.TimelineController = MediaTimelineController;
         }
 
         public async Task UploadVideo()
@@ -109,11 +123,24 @@ namespace HapticLabeling.ViewModel
             Debug.WriteLine(Events.Count);
         }
 
-        public void SetMediaPosition(double position)
+        public void PlayMedia()
         {
-            MediaPosition = position;
-            VideoPlayer.PlaybackSession.Position = TimeSpan.FromMilliseconds(position);
-            AudioPlayer.PlaybackSession.Position = TimeSpan.FromMilliseconds(position);
+            if (VideoPlayer.Source != null && AudioPlayer.Source != null)
+            {
+                if(VideoPlayer.PlaybackSession.Position == TimeSpan.Zero)
+                {
+                    MediaTimelineController.Start();
+                }
+                else
+                {
+                    MediaTimelineController.Resume();
+                }
+            }
+        }
+
+        public void PauseMedia()
+        {
+            MediaTimelineController.Pause();
         }
     }
 }

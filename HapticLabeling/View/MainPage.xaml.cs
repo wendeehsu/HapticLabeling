@@ -1,11 +1,13 @@
 ﻿using HapticLabeling.ViewModel;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Media;
 using Windows.Media.Core;
 using Windows.Media.Playback;
 using Windows.UI.Xaml;
@@ -24,6 +26,19 @@ namespace HapticLabeling
         public MainPage()
         {
             this.InitializeComponent();
+            ViewModel.Init();
+            ViewModel.MediaTimelineController.PositionChanged += MediaTimelineController_PositionChanged;
+        }
+
+        private async void MediaTimelineController_PositionChanged(MediaTimelineController sender, object args)
+        {
+            if (ViewModel.MediaLength != 0)
+            {
+                await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+                {
+                    PositionSlider.Value = sender.Position.TotalMilliseconds;
+                });
+            }
         }
 
         private async void UploadVideo_Click(object sender, RoutedEventArgs e)
@@ -41,7 +56,6 @@ namespace HapticLabeling
             if (ViewModel.AudioPlayer.Source != null)
             {
                 audioPlayer.SetMediaPlayer(ViewModel.AudioPlayer);
-                StartMedia();
             }
         }
 
@@ -51,29 +65,24 @@ namespace HapticLabeling
             if (actionFile != null)
             {
                 ViewModel.SetEvents(actionFile);
-                StartMedia();
             }
         }
 
         private void Slider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
-            ViewModel.SetMediaPosition(e.NewValue);
-            StartMedia();
+            ViewModel.MediaTimelineController.Position = TimeSpan.FromMilliseconds(e.NewValue);
         }
 
-        private void StartMedia()
+        private void PlayBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (ViewModel.VideoPlayer.Source != null)
-            {
-                ViewModel.VideoPlayer.Play();
-                videoPlayer.SetMediaPlayer(ViewModel.VideoPlayer);
-            }
+            ViewModel.ShowPauseBtn = true;
+            ViewModel.PlayMedia();
+        }
 
-            if (ViewModel.AudioPlayer.Source != null)
-            {
-                ViewModel.AudioPlayer.Play();
-                audioPlayer.SetMediaPlayer(ViewModel.AudioPlayer);
-            }
+        private void PauseBtn_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.ShowPauseBtn = false;
+            ViewModel.PauseMedia();
         }
     }
 }
