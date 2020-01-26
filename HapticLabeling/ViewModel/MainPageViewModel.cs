@@ -41,6 +41,31 @@ namespace HapticLabeling.ViewModel
             set => Set(ref _showPauseBtn, value);
         }
 
+        private bool _enableVideo = true;
+        public bool EnableVideo
+        {
+            get => _enableVideo;
+            set => Set(ref _enableVideo, value);
+        }
+
+        private bool _enableAudio = true;
+        public bool EnableAudio
+        {
+            get => _enableAudio;
+            set
+            {
+                Set(ref _enableAudio, value);
+                AudioPlayer.IsMuted = !value;
+            }
+        }
+
+        private bool _enableEvents = true;
+        public bool EnableEvents
+        {
+            get => _enableEvents;
+            set => Set(ref _enableEvents, value);
+        }
+
         public void Init()
         {
             MediaTimelineController = new MediaTimelineController();
