@@ -2,23 +2,11 @@
 using HapticLabeling.View;
 using HapticLabeling.ViewModel;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.Media;
-using Windows.Media.Core;
-using Windows.Media.Playback;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 
 namespace HapticLabeling
 {
@@ -91,8 +79,49 @@ namespace HapticLabeling
         {
             if (ViewModel.VideoPlayer.PlaybackSession.Position <= TimeSpan.FromMilliseconds(50)) return;
             var label = new HapticLabelMark();
-            label.ViewModel.Event = new HapticEvent(PositionSlider.Value, ViewModel.MediaLength, PositionSlider.ActualWidth);
-            LabelGrid.Children.Insert(0, label);
+            label.ViewModel.Event = new HapticEvent(PositionSlider.Value, PositionSlider.ActualWidth * PositionSlider.Value / ViewModel.MediaLength);
+            
+            var index = ViewModel.GetInsertIndex(label.ViewModel.Event);
+            if(index == -1)
+            {
+                LabelGrid.Children.Add(label);
+            }
+            else
+            {
+                LabelGrid.Children.Insert(index, label);
+            }
+
+            ViewModel.CurrentiIndex = LabelGrid.Children.IndexOf(label);
+        }
+
+        private void Label_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            var label = sender as HapticLabelMark;
+            ViewModel.ShowLabelDetail = true;
+
+            var index = ViewModel.HapticEvents.IndexOf(label.ViewModel.Event);
+            if (index == -1) return;
+            ViewModel.CurrentiIndex = index;
+            StartTimeTextBlock.Text = ViewModel.HapticEvents[index].StartTime.ToString();
+            DurationTextBlock.Text = ViewModel.HapticEvents[index].Duration.ToString();
+            NameTextBox.Text = ViewModel.HapticEvents[index].Name.ToString();
+            ValueTextBox.Text = ViewModel.HapticEvents[index].Value.ToString();
+        }
+
+        private void SetLabelDuration()
+        {
+            var index = ViewModel.CurrentiIndex;
+            if (index == -1) return;
+            var label = LabelGrid.Children[index] as HapticLabelMark;
+            var duration = PositionSlider.Value - label.ViewModel.Event.StartTime;
+            LabelGrid.Children.RemoveAt(index);
+            if (duration >= 0)
+            {
+                var length = PositionSlider.ActualWidth * duration / ViewModel.MediaLength;
+                label.ViewModel.Event.SetDuration(PositionSlider.Value, length);
+                label.Tapped += Label_Tapped;
+                LabelGrid.Children.Insert(index, label);
+            }
         }
 
         private void AddHapticLabel_Tapped(object sender, TappedRoutedEventArgs e)
@@ -104,6 +133,36 @@ namespace HapticLabeling
         private void EndHapticLabel_Tapped(object sender, TappedRoutedEventArgs e)
         {
             ViewModel.ShowAddLabelBtn = true;
+            SetLabelDuration();
+        }
+
+        private void DeleteLabel_Click(object sender, RoutedEventArgs e)
+        {
+            var index = ViewModel.CurrentiIndex;
+            if (index == -1) return;
+            LabelGrid.Children.RemoveAt(index);
+            ViewModel.HapticEvents.RemoveAt(index);
+            ViewModel.ShowLabelDetail = false;
+        }
+
+        private void SaveLabel_Click(object sender, RoutedEventArgs e)
+        {
+            var index = ViewModel.CurrentiIndex;
+            if (index == -1) return;
+            ViewModel.HapticEvents[index].Name = NameTextBox.Text;
+            ViewModel.HapticEvents[index].Value = ValueTextBox.Text;
+
+            var label = LabelGrid.Children[index] as HapticLabelMark;
+            label.ViewModel.Event = ViewModel.HapticEvents[index];
+            LabelGrid.Children.RemoveAt(index);
+            LabelGrid.Children.Insert(index, label);
+
+            ViewModel.ShowLabelDetail = false;
+        }
+
+        private void CancelLabel_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.ShowLabelDetail = false;
         }
     }
 }

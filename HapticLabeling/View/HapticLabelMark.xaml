@@ -16,19 +16,12 @@
             StrokeThickness="5" 
             Height="20" 
             Width="20"
-            Fill="Transparent"
-            HorizontalAlignment="Right">
-            <Ellipse.ContextFlyout>
-                <MenuFlyout>
-                    <MenuFlyoutItem Text="Edit" Icon="Edit" />
-                    <MenuFlyoutItem Text="Delete" Icon="Delete" />
-                </MenuFlyout>
-            </Ellipse.ContextFlyout>
-        </Ellipse>
+            Fill="LightGoldenrodYellow"
+            HorizontalAlignment="Right" />
         <Line
-            X1="-1"
+            X1="0"
             X2="{x:Bind ViewModel.Event.EventDuration, Mode=OneWay}"
-            Stroke="MediumPurple"
+            Stroke="LightYellow"
             StrokeThickness="5"
             HorizontalAlignment="Right"
             VerticalAlignment="Center" />

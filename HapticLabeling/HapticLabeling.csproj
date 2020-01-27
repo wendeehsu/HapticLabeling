@@ -119,6 +119,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Helper\RelayCommand.cs" />
     <Compile Include="Model\BoolToVisibilityConverter.cs" />
     <Compile Include="Model\Event.cs" />
     <Compile Include="Model\HapticEvent.cs" />

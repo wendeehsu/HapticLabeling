@@ -15,12 +15,12 @@ namespace HapticLabeling.ViewModel
 {
     public class MainPageViewModel : Observable
     {
-        private bool _isLabeling = false;
+        public int CurrentiIndex = -1;
         public List<Event> Events = new List<Event>();
+        public List<HapticEvent> HapticEvents = new List<HapticEvent>();
         public MediaPlayer VideoPlayer = new MediaPlayer();
         public MediaPlayer AudioPlayer = new MediaPlayer();
         public MediaTimelineController MediaTimelineController = null;
-        public List<HapticEvent> HapticEvents = new List<HapticEvent>();
 
         private double _mediaLength;
         public double MediaLength
@@ -41,6 +41,13 @@ namespace HapticLabeling.ViewModel
         {
             get => _showPauseBtn;
             set => Set(ref _showPauseBtn, value);
+        }
+
+        private bool _showLabelDetail;
+        public bool ShowLabelDetail
+        {
+            get => _showLabelDetail;
+            set => Set(ref _showLabelDetail, value);
         }
 
         private bool _showAddLabelBtn = true;
@@ -175,7 +182,45 @@ namespace HapticLabeling.ViewModel
         public void PauseMedia()
         {
             MediaTimelineController.Pause();
-            _isLabeling = !_isLabeling;
+        }
+
+        public int GetInsertIndex(HapticEvent _event)
+        {
+            var insertIndex = -1;
+            if (HapticEvents == null || HapticEvents.Count == 0)
+            {
+                insertIndex = 0;
+            }
+            else
+            {
+                for (var i = 0; i < HapticEvents.Count; i++)
+                {
+                    if(HapticEvents[i].StartTime < _event.StartTime)
+                    {
+                        if(i == 0)
+                        {
+                            insertIndex = 0;
+                            break;
+                        }
+                        else if (HapticEvents[i-1].StartTime >= _event.StartTime)
+                        {
+                            insertIndex = i;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if(insertIndex == -1)
+            {
+                HapticEvents.Add(_event);
+            }
+            else
+            {
+                HapticEvents.Insert(insertIndex, _event);
+            }
+
+            return insertIndex;
         }
     }
 }

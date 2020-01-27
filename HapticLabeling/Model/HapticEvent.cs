@@ -11,24 +11,30 @@ namespace HapticLabeling.Model
         public double StartTime;
         public double Duration;
 
-        private string _name;
+        private string _name = "";
         public string Name
         {
             get => _name;
             set => Set(ref _name, value);
         }
 
-        private int _value;
-        public int Value
+        private string _value = "";
+        public string Value
         {
             get => _value;
             set => Set(ref _value, value);
         }
 
-        public HapticEvent(double _startTime, double _mediaLength, double _uiLength)
+        public HapticEvent(double _startTime, double _eventStartTime)
         {
             StartTime = _startTime;
-            EventStartTime = _uiLength * _startTime / _mediaLength;
+            EventStartTime = _eventStartTime;
+        }
+
+        public void SetDuration(double _endTime, double _eventDuration)
+        {
+            Duration = _endTime - StartTime;
+            EventDuration = _eventDuration - 20;
         }
 
         #region UI Display

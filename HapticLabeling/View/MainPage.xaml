@@ -27,6 +27,7 @@
         </Style>
         <Style x:Key="HorizontalStackPanel" TargetType="StackPanel">
             <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="Orientation" Value="Horizontal" />
             <Setter Property="Spacing" Value="15" />
         </Style>
@@ -148,26 +149,85 @@
             </Grid>
         </Grid>
         <Grid 
+            Grid.Row="4"
+            Margin="20,0"
+            Visibility="{x:Bind ViewModel.ShowLabelDetail, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Button
+                Background="Red"
+                Foreground="White"
+                Style="{StaticResource UploadBtn}"
+                Click="DeleteLabel_Click">
+                <Button.Content>
+                    <TextBlock Text="&#xE74D;" FontFamily="Segoe MDL2 Assets"/>
+                </Button.Content>
+            </Button>
+            <StackPanel Grid.Column="1" Style="{StaticResource HorizontalStackPanel}">
+                <TextBlock Text="StartTime : " />
+                <TextBlock x:Name="StartTimeTextBlock" Text="12345" />
+            </StackPanel>
+            <StackPanel Grid.Column="2" Style="{StaticResource HorizontalStackPanel}">
+                <TextBlock Text="Duration : " />
+                <TextBlock x:Name="DurationTextBlock" Text="12345" />
+            </StackPanel>
+            <StackPanel Grid.Column="3" Style="{StaticResource HorizontalStackPanel}">
+                <TextBlock Text="Name : " VerticalAlignment="Center"/>
+                <TextBox x:Name="NameTextBox" Width="150" PlaceholderText="(haptic event name)" />
+            </StackPanel>
+            <StackPanel Grid.Column="4" Style="{StaticResource HorizontalStackPanel}">
+                <TextBlock Text="Value : " VerticalAlignment="Center"/>
+                <TextBox x:Name="ValueTextBox" Width="150" PlaceholderText="(haptic event value)" />
+            </StackPanel>
+            <StackPanel Grid.Column="5" Style="{StaticResource HorizontalStackPanel}">
+                <Button
+                Background="{ThemeResource SystemAccentColor}"
+                Foreground="White"
+                Style="{StaticResource UploadBtn}"
+                Click="SaveLabel_Click">
+                    <Button.Content>
+                        <TextBlock Text="&#xE74E;" FontFamily="Segoe MDL2 Assets"/>
+                    </Button.Content>
+                </Button>
+                <Button
+                Background="Transparent"
+                Style="{StaticResource UploadBtn}"
+                Click="CancelLabel_Click">
+                    <Button.Content>
+                        <TextBlock Text="&#xE711;" FontFamily="Segoe MDL2 Assets"/>
+                    </Button.Content>
+                </Button>
+            </StackPanel>
+        </Grid>
+        <Grid 
             Grid.Row="4" 
-            Tapped="AddHapticLabel_Tapped"
-            Background="WhiteSmoke"
-            Visibility="{x:Bind ViewModel.ShowAddLabelBtn, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+            Visibility="{x:Bind ViewModel.ShowLabelDetail, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=Inverse}">
+            <Grid 
+                Tapped="AddHapticLabel_Tapped"
+                Background="WhiteSmoke"
+                Visibility="{x:Bind ViewModel.ShowAddLabelBtn, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+                <TextBlock 
+                    Text="&#xE948;" 
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    FontFamily="Segoe MDL2 Assets"/>
+            </Grid>
+            <Grid 
+                Tapped="EndHapticLabel_Tapped"
+                Background="WhiteSmoke"
+                Visibility="{x:Bind ViewModel.ShowAddLabelBtn, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=Inverse}">
             <TextBlock 
-                Text="&#xE948;" 
+                Text="&#xF16E;" 
                 VerticalAlignment="Center"
                 HorizontalAlignment="Center"
                 FontFamily="Segoe MDL2 Assets"/>
         </Grid>
-        <Grid 
-            Grid.Row="4" 
-            Tapped="EndHapticLabel_Tapped"
-            Background="WhiteSmoke"
-            Visibility="{x:Bind ViewModel.ShowAddLabelBtn, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=Inverse}">
-            <TextBlock 
-                Text="&#xE71A;" 
-                VerticalAlignment="Center"
-                HorizontalAlignment="Center"
-                FontFamily="Segoe MDL2 Assets"/>
         </Grid>
     </Grid>
 </Page>

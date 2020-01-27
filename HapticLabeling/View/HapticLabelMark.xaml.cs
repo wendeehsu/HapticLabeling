@@ -1,4 +1,5 @@
-﻿using HapticLabeling.Model;
+﻿using HapticLabeling.Helper;
+using HapticLabeling.Model;
 using HapticLabeling.ViewModel;
 using System;
 using System.Collections.Generic;
@@ -20,7 +21,6 @@ namespace HapticLabeling.View
     public sealed partial class HapticLabelMark : UserControl
     {
         public HapticLabelMarkViewModel ViewModel = new HapticLabelMarkViewModel();
-        
         public HapticLabelMark()
         {
             this.InitializeComponent();
