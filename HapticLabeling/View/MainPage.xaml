@@ -5,12 +5,13 @@
     xmlns:converter="using:HapticLabeling.Model"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:view="using:HapticLabeling.View"
     mc:Ignorable="d"
     Background="White">
     <Page.Resources>
         <converter:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         <Style x:Key="ChannelIcon" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="30" />
+            <Setter Property="FontSize" Value="20" />
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="HorizontalAlignment" Value="Center" />
             <Setter Property="FontFamily" Value="Segoe MDL2 Assets" />
@@ -32,10 +33,11 @@
     </Page.Resources>
     <Grid Background="LightGray">
         <Grid.RowDefinitions>
-            <RowDefinition Height="6*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="40" />
             <RowDefinition Height="50" />
+            <RowDefinition Height="60" />
             <RowDefinition Height="50" />
-            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid Grid.Row="0" Background="GhostWhite">
             <MediaPlayerElement x:Name="audioPlayer" />
@@ -49,39 +51,6 @@
             </Grid>
         </Grid>
         <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <Grid Width="50" HorizontalAlignment="Center">
-                <Button
-                    Background="Transparent"
-                    Style="{StaticResource UploadBtn}"
-                    Click="PlayBtn_Click"
-                    Visibility="{x:Bind ViewModel.ShowPauseBtn, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=Inverse}">
-                    <Button.Content>
-                        <TextBlock Text="&#xE768;" FontFamily="Segoe MDL2 Assets"/>
-                    </Button.Content>
-                </Button>
-                <Button
-                    Background="Transparent"
-                    Style="{StaticResource UploadBtn}"
-                    Click="PauseBtn_Click"
-                    Visibility="{x:Bind ViewModel.ShowPauseBtn, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
-                    <Button.Content>
-                        <TextBlock Text="&#xE769;" FontFamily="Segoe MDL2 Assets"/>
-                    </Button.Content>
-                </Button>
-            </Grid>
-            <Slider
-                x:Name="PositionSlider"
-                StepFrequency="1"
-                Grid.Column="1"
-                ValueChanged="Slider_ValueChanged"
-                Maximum="{x:Bind ViewModel.MediaLength, Mode=OneWay}"
-                Style="{StaticResource TimeLineSlider}" />
-        </Grid>
-        <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
@@ -127,10 +96,78 @@
                 <CheckBox IsChecked="{x:Bind ViewModel.EnableEvents, Mode=TwoWay}"/>
             </StackPanel>
         </Grid>
-        <TextBlock
-            Grid.Column="0"
-            Grid.Row="3"
-            Text="&#xEB8A;"
-            Style="{StaticResource ChannelIcon}" />
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="50"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid HorizontalAlignment="Center">
+                <Button
+                    Background="Transparent"
+                    Style="{StaticResource UploadBtn}"
+                    Click="PlayBtn_Click"
+                    Visibility="{x:Bind ViewModel.ShowPauseBtn, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=Inverse}">
+                    <Button.Content>
+                        <TextBlock Text="&#xE768;" FontFamily="Segoe MDL2 Assets"/>
+                    </Button.Content>
+                </Button>
+                <Button
+                    Background="Transparent"
+                    Style="{StaticResource UploadBtn}"
+                    Click="PauseBtn_Click"
+                    Visibility="{x:Bind ViewModel.ShowPauseBtn, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <Button.Content>
+                        <TextBlock Text="&#xE769;" FontFamily="Segoe MDL2 Assets"/>
+                    </Button.Content>
+                </Button>
+            </Grid>
+            <Slider
+                x:Name="PositionSlider"
+                StepFrequency="1"
+                Grid.Column="1"
+                ValueChanged="Slider_ValueChanged"
+                Maximum="{x:Bind ViewModel.MediaLength, Mode=OneWay}"
+                Style="{StaticResource TimeLineSlider}" />
+        </Grid>
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="50"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock 
+                Text="&#xE815;" 
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center"
+                FontFamily="Segoe MDL2 Assets"/>
+            <Grid 
+                Grid.Column="1" 
+                x:Name="LabelGrid"
+                VerticalAlignment="Center" 
+                Margin="30,0"
+                HorizontalAlignment="Left">
+            </Grid>
+        </Grid>
+        <Grid 
+            Grid.Row="4" 
+            Tapped="AddHapticLabel_Tapped"
+            Background="WhiteSmoke"
+            Visibility="{x:Bind ViewModel.ShowAddLabelBtn, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+            <TextBlock 
+                Text="&#xE948;" 
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center"
+                FontFamily="Segoe MDL2 Assets"/>
+        </Grid>
+        <Grid 
+            Grid.Row="4" 
+            Tapped="EndHapticLabel_Tapped"
+            Background="WhiteSmoke"
+            Visibility="{x:Bind ViewModel.ShowAddLabelBtn, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=Inverse}">
+            <TextBlock 
+                Text="&#xE71A;" 
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center"
+                FontFamily="Segoe MDL2 Assets"/>
+        </Grid>
     </Grid>
 </Page>

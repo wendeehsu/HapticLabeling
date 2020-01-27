@@ -121,8 +121,13 @@
     </Compile>
     <Compile Include="Model\BoolToVisibilityConverter.cs" />
     <Compile Include="Model\Event.cs" />
+    <Compile Include="Model\HapticEvent.cs" />
     <Compile Include="Model\Observable.cs" />
+    <Compile Include="ViewModel\HapticLabelMarkViewModel.cs" />
     <Compile Include="ViewModel\MainPageViewModel.cs" />
+    <Compile Include="View\HapticLabelMark.xaml.cs">
+      <DependentUpon>HapticLabelMark.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -148,6 +153,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="View\HapticLabelMark.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

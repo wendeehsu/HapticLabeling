@@ -1,4 +1,6 @@
-﻿using HapticLabeling.ViewModel;
+﻿using HapticLabeling.Model;
+using HapticLabeling.View;
+using HapticLabeling.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -83,6 +85,25 @@ namespace HapticLabeling
         {
             ViewModel.ShowPauseBtn = false;
             ViewModel.PauseMedia();
+        }
+
+        private void AddInitLabel()
+        {
+            if (ViewModel.VideoPlayer.PlaybackSession.Position <= TimeSpan.FromMilliseconds(50)) return;
+            var label = new HapticLabelMark();
+            label.ViewModel.Event = new HapticEvent(PositionSlider.Value, ViewModel.MediaLength, PositionSlider.ActualWidth);
+            LabelGrid.Children.Insert(0, label);
+        }
+
+        private void AddHapticLabel_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            ViewModel.ShowAddLabelBtn = false;
+            AddInitLabel();
+        }
+
+        private void EndHapticLabel_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            ViewModel.ShowAddLabelBtn = true;
         }
     }
 }

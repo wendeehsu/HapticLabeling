@@ -15,10 +15,12 @@ namespace HapticLabeling.ViewModel
 {
     public class MainPageViewModel : Observable
     {
+        private bool _isLabeling = false;
         public List<Event> Events = new List<Event>();
         public MediaPlayer VideoPlayer = new MediaPlayer();
         public MediaPlayer AudioPlayer = new MediaPlayer();
         public MediaTimelineController MediaTimelineController = null;
+        public List<HapticEvent> HapticEvents = new List<HapticEvent>();
 
         private double _mediaLength;
         public double MediaLength
@@ -39,6 +41,13 @@ namespace HapticLabeling.ViewModel
         {
             get => _showPauseBtn;
             set => Set(ref _showPauseBtn, value);
+        }
+
+        private bool _showAddLabelBtn = true;
+        public bool ShowAddLabelBtn
+        {
+            get => _showAddLabelBtn;
+            set => Set(ref _showAddLabelBtn, value);
         }
 
         private bool _enableVideo = true;
@@ -166,6 +175,7 @@ namespace HapticLabeling.ViewModel
         public void PauseMedia()
         {
             MediaTimelineController.Pause();
+            _isLabeling = !_isLabeling;
         }
     }
 }

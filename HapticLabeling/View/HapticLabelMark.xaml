@@ -1,0 +1,36 @@
+﻿<UserControl
+    x:Class="HapticLabeling.View.HapticLabelMark"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:HapticLabeling.View"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <StackPanel 
+        Background="Transparent"
+        Orientation="Horizontal"
+        HorizontalAlignment="Left">
+        <TextBlock Width="{x:Bind ViewModel.Event.EventStartTime, Mode=OneWay}"/>
+        <Ellipse 
+            Stroke="MediumPurple" 
+            StrokeThickness="5" 
+            Height="20" 
+            Width="20"
+            Fill="Transparent"
+            HorizontalAlignment="Right">
+            <Ellipse.ContextFlyout>
+                <MenuFlyout>
+                    <MenuFlyoutItem Text="Edit" Icon="Edit" />
+                    <MenuFlyoutItem Text="Delete" Icon="Delete" />
+                </MenuFlyout>
+            </Ellipse.ContextFlyout>
+        </Ellipse>
+        <Line
+            X1="-1"
+            X2="{x:Bind ViewModel.Event.EventDuration, Mode=OneWay}"
+            Stroke="MediumPurple"
+            StrokeThickness="5"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Center" />
+    </StackPanel>
+</UserControl>
