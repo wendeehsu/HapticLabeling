@@ -8,6 +8,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -45,6 +46,18 @@ namespace HapticLabeling.View
             Event.Duration = _endTime - Event.StartTime;
             Event.EventDuration = _eventDuration - 20;
             DurationLine.X2 = Event.EventDuration;
+        }
+
+        public void HightLight()
+        {
+            Ellipse.Stroke = new SolidColorBrush(Colors.Red);
+            DurationLine.Stroke = new SolidColorBrush(Colors.Red);
+        }
+
+        public void RemoveHighlight()
+        {
+            Ellipse.Stroke = new SolidColorBrush(Colors.MediumPurple);
+            DurationLine.Stroke = new SolidColorBrush(Colors.LightYellow);
         }
     }
 }

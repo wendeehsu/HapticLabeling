@@ -124,7 +124,6 @@
     <Compile Include="Model\Event.cs" />
     <Compile Include="Model\HapticEvent.cs" />
     <Compile Include="Model\Observable.cs" />
-    <Compile Include="ViewModel\HapticLabelMarkViewModel.cs" />
     <Compile Include="ViewModel\MainPageViewModel.cs" />
     <Compile Include="View\HapticLabelMark.xaml.cs">
       <DependentUpon>HapticLabelMark.xaml</DependentUpon>

@@ -11,7 +11,8 @@
         Orientation="Horizontal"
         HorizontalAlignment="Left">
         <TextBlock x:Name="SpaceTextBlock" />
-        <Ellipse 
+        <Ellipse
+            x:Name="Ellipse"
             Stroke="MediumPurple" 
             StrokeThickness="5" 
             Height="20" 

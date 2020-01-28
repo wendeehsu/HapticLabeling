@@ -96,7 +96,9 @@ namespace HapticLabeling
 
         private void Label_Tapped(object sender, TappedRoutedEventArgs e)
         {
+            RemoveAllHighLights();
             var label = sender as HapticLabelMark;
+            label.HightLight();
             ViewModel.ShowLabelDetail = true;
 
             var index = ViewModel.HapticEvents.IndexOf(label.Event);
@@ -154,6 +156,7 @@ namespace HapticLabeling
 
             var label = LabelGrid.Children[index] as HapticLabelMark;
             label.Event = ViewModel.HapticEvents[index];
+            label.RemoveHighlight();
             LabelGrid.Children.RemoveAt(index);
             LabelGrid.Children.Insert(index, label);
 
@@ -162,9 +165,18 @@ namespace HapticLabeling
 
         private void CancelLabel_Click(object sender, RoutedEventArgs e)
         {
+            var label = LabelGrid.Children[ViewModel.CurrentiIndex] as HapticLabelMark;
+            label.RemoveHighlight();
             ViewModel.ShowLabelDetail = false;
         }
 
-
+        private void RemoveAllHighLights()
+        {
+            for(int i = 0; i < LabelGrid.Children.Count; i ++)
+            {
+                var label = LabelGrid.Children[i] as HapticLabelMark;
+                label.RemoveHighlight();
+            }
+        }
     }
 }
