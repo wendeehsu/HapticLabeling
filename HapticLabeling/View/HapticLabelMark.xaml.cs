@@ -20,10 +20,31 @@ namespace HapticLabeling.View
 {
     public sealed partial class HapticLabelMark : UserControl
     {
-        public HapticLabelMarkViewModel ViewModel = new HapticLabelMarkViewModel();
+        public double EventStartTime;
+        public double EventDuration;
+
         public HapticLabelMark()
         {
             this.InitializeComponent();
+        }
+
+        private HapticEvent _event;
+        public HapticEvent Event
+        {
+            get => _event;
+            set
+            {
+                _event = value;
+                SpaceTextBlock.Width = _event.EventStartTime;
+                DurationLine.X2 = _event.EventDuration;
+            }
+        }
+
+        public void SetDeration(double _endTime, double _eventDuration)
+        {
+            Event.Duration = _endTime - Event.StartTime;
+            Event.EventDuration = _eventDuration - 20;
+            DurationLine.X2 = Event.EventDuration;
         }
     }
 }

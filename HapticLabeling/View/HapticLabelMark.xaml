@@ -10,7 +10,7 @@
         Background="Transparent"
         Orientation="Horizontal"
         HorizontalAlignment="Left">
-        <TextBlock Width="{x:Bind ViewModel.Event.EventStartTime, Mode=OneWay}"/>
+        <TextBlock x:Name="SpaceTextBlock" />
         <Ellipse 
             Stroke="MediumPurple" 
             StrokeThickness="5" 
@@ -19,8 +19,8 @@
             Fill="LightGoldenrodYellow"
             HorizontalAlignment="Right" />
         <Line
+            x:Name="DurationLine"
             X1="0"
-            X2="{x:Bind ViewModel.Event.EventDuration, Mode=OneWay}"
             Stroke="LightYellow"
             StrokeThickness="5"
             HorizontalAlignment="Right"

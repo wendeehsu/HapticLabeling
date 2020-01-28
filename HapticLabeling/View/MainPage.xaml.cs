@@ -79,9 +79,9 @@ namespace HapticLabeling
         {
             if (ViewModel.VideoPlayer.PlaybackSession.Position <= TimeSpan.FromMilliseconds(50)) return;
             var label = new HapticLabelMark();
-            label.ViewModel.Event = new HapticEvent(PositionSlider.Value, PositionSlider.ActualWidth * PositionSlider.Value / ViewModel.MediaLength);
+            label.Event = new HapticEvent(PositionSlider.Value, PositionSlider.ActualWidth * PositionSlider.Value / ViewModel.MediaLength);
             
-            var index = ViewModel.GetInsertIndex(label.ViewModel.Event);
+            var index = ViewModel.GetInsertIndex(label.Event);
             if(index == -1)
             {
                 LabelGrid.Children.Add(label);
@@ -99,7 +99,7 @@ namespace HapticLabeling
             var label = sender as HapticLabelMark;
             ViewModel.ShowLabelDetail = true;
 
-            var index = ViewModel.HapticEvents.IndexOf(label.ViewModel.Event);
+            var index = ViewModel.HapticEvents.IndexOf(label.Event);
             if (index == -1) return;
             ViewModel.CurrentiIndex = index;
             StartTimeTextBlock.Text = ViewModel.HapticEvents[index].StartTime.ToString();
@@ -113,12 +113,12 @@ namespace HapticLabeling
             var index = ViewModel.CurrentiIndex;
             if (index == -1) return;
             var label = LabelGrid.Children[index] as HapticLabelMark;
-            var duration = PositionSlider.Value - label.ViewModel.Event.StartTime;
+            var duration = PositionSlider.Value - label.Event.StartTime;
             LabelGrid.Children.RemoveAt(index);
             if (duration >= 0)
             {
                 var length = PositionSlider.ActualWidth * duration / ViewModel.MediaLength;
-                label.ViewModel.Event.SetDuration(PositionSlider.Value, length);
+                label.SetDeration(PositionSlider.Value, length);
                 label.Tapped += Label_Tapped;
                 LabelGrid.Children.Insert(index, label);
             }
@@ -153,7 +153,7 @@ namespace HapticLabeling
             ViewModel.HapticEvents[index].Value = ValueTextBox.Text;
 
             var label = LabelGrid.Children[index] as HapticLabelMark;
-            label.ViewModel.Event = ViewModel.HapticEvents[index];
+            label.Event = ViewModel.HapticEvents[index];
             LabelGrid.Children.RemoveAt(index);
             LabelGrid.Children.Insert(index, label);
 
@@ -164,5 +164,7 @@ namespace HapticLabeling
         {
             ViewModel.ShowLabelDetail = false;
         }
+
+
     }
 }

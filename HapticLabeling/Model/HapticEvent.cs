@@ -31,12 +31,6 @@ namespace HapticLabeling.Model
             EventStartTime = _eventStartTime;
         }
 
-        public void SetDuration(double _endTime, double _eventDuration)
-        {
-            Duration = _endTime - StartTime;
-            EventDuration = _eventDuration - 20;
-        }
-
         #region UI Display
         private double _eventStartTime;
         public double EventStartTime
