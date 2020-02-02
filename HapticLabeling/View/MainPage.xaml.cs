@@ -51,11 +51,7 @@ namespace HapticLabeling
 
         private async void UploadAction_Click(object sender, RoutedEventArgs e)
         {
-            var actionFile = await ViewModel.UploadAction();
-            if (actionFile != null)
-            {
-                ViewModel.SetEvents(actionFile);
-            }
+            await ViewModel.UploadAction();
         }
 
         private void Slider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)

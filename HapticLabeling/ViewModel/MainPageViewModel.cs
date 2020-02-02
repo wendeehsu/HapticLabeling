@@ -142,7 +142,7 @@ namespace HapticLabeling.ViewModel
             }
         }
 
-        public async Task<StorageFile> UploadAction()
+        public async Task UploadAction()
         {
             var openPicker = new FileOpenPicker
             {
@@ -152,16 +152,11 @@ namespace HapticLabeling.ViewModel
             openPicker.FileTypeFilter.Add(".json");
             openPicker.FileTypeFilter.Add(".txt");
             var file = await openPicker.PickSingleFileAsync();
-            return file;
-        }
-
-        public async void SetEvents(StorageFile file)
-        {
-            string text = await FileIO.ReadTextAsync(file);
-            Events = JsonConvert.DeserializeObject<List<Event>>(text);
-
-            // TODO: set events.
-            Debug.WriteLine(Events.Count);
+            if(file != null)
+            {
+                string text = await FileIO.ReadTextAsync(file);
+                Events = JsonConvert.DeserializeObject<List<Event>>(text);
+            }
         }
 
         public void PlayMedia()
