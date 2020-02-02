@@ -7,8 +7,68 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
     <Grid 
-        Width="300"
-        Background="WhiteSmoke">
-        <Image Source="/Assets/xbox.png" />
+        Width="400"
+        Height="350">
+        <Image
+            Width="300"
+            Source="/Assets/xbox.png" />
+        <Image
+            x:Name="leftTrigger"
+            Source="/Assets/left-arrow.png"
+            HorizontalAlignment="Left"
+            Width="60"
+            VerticalAlignment="Top"
+            Margin="0,100" />
+        <Image
+            x:Name="rightTrigger"
+            Source="/Assets/right-arrow.png"
+            HorizontalAlignment="Right"
+            Width="60"
+            VerticalAlignment="Top"
+            Margin="0,100" />
+        <Image
+            x:Name="leftShoulder"
+            Source="/Assets/down-arrow.png"
+            HorizontalAlignment="Left"
+            Width="60"
+            VerticalAlignment="Top"
+            Margin="100,0" />
+        <Image
+            x:Name="rightShoulder"
+            Source="/Assets/down-arrow.png"
+            HorizontalAlignment="Right"
+            Width="60"
+            VerticalAlignment="Top"
+            Margin="100,0" />
+        <Image
+            x:Name="leftMushroonUp"
+            Source="/Assets/up-circle.png"
+            HorizontalAlignment="Left"
+            Width="30"
+            VerticalAlignment="Top"
+            Visibility="Collapsed"
+            Margin="109,115" />
+        <Image
+            x:Name="leftMushroonDown"
+            Source="/Assets/down-circle.png"
+            HorizontalAlignment="Left"
+            Width="30"
+            VerticalAlignment="Top"
+            Margin="109,133" />
+        <Image
+            x:Name="rightMushroonUp"
+            Source="/Assets/up-circle.png"
+            HorizontalAlignment="Right"
+            Width="30"
+            VerticalAlignment="Top"
+            Visibility="Collapsed"
+            Margin="145,162" />
+        <Image
+            x:Name="rightMushroonDown"
+            Source="/Assets/down-circle.png"
+            HorizontalAlignment="Right"
+            Width="30"
+            VerticalAlignment="Bottom"
+            Margin="145,158"/>
     </Grid>
 </UserControl>

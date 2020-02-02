@@ -142,6 +142,13 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\down-arrow.png" />
+    <Content Include="Assets\down-circle.png" />
+    <Content Include="Assets\left-arrow.png" />
+    <Content Include="Assets\left-circle.png" />
+    <Content Include="Assets\right-arrow.png" />
+    <Content Include="Assets\right-circle.png" />
+    <Content Include="Assets\up-circle.png" />
     <Content Include="Assets\xbox.png" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
