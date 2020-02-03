@@ -56,7 +56,7 @@
             </Grid>
             <view:ControlStick 
                 Grid.Column="0"
-                VerticalAlignment="Center"
+                VerticalAlignment="Bottom"
                 Visibility="{x:Bind ViewModel.EnableEvents, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" />
         </Grid>
         <Grid Grid.Row="1">
