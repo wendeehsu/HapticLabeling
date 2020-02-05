@@ -13,7 +13,7 @@ using Windows.UI.Xaml;
 
 namespace HapticLabeling.ViewModel
 {
-    public class MainPageViewModel : Observable
+    public class EventPageViewModel : Observable
     {
         public int CurrentiIndex = -1;
         public List<Event> Events = new List<Event>();
@@ -161,7 +161,7 @@ namespace HapticLabeling.ViewModel
 
         public void PlayMedia()
         {
-            if (VideoPlayer.Source != null && AudioPlayer.Source != null)
+            if (VideoPlayer.Source != null || AudioPlayer.Source != null)
             {
                 if(VideoPlayer.PlaybackSession.Position == TimeSpan.Zero)
                 {

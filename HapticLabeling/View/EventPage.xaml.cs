@@ -8,12 +8,12 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 
-namespace HapticLabeling
+namespace HapticLabeling.View
 {
-    public sealed partial class MainPage : Page
+    public sealed partial class EventPage : Page
     {
-        public MainPageViewModel ViewModel = new MainPageViewModel();
-        public MainPage()
+        public EventPageViewModel ViewModel = new EventPageViewModel();
+        public EventPage()
         {
             this.InitializeComponent();
             ViewModel.Init();
