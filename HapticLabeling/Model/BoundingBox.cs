@@ -3,6 +3,9 @@ namespace HapticLabeling.Model
 {
     public class BoundingBox : Observable
     {
+        public double leftPos;
+        public double topPos;
+
         private double _x;
         public double X
         {

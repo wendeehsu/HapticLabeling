@@ -133,6 +133,9 @@
     <Compile Include="Model\HapticEvent.cs" />
     <Compile Include="Model\Observable.cs" />
     <Compile Include="ViewModel\EventPageViewModel.cs" />
+    <Compile Include="View\Uc\BoxView.xaml.cs">
+      <DependentUpon>BoxView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\Uc\ControlStick.xaml.cs">
       <DependentUpon>ControlStick.xaml</DependentUpon>
     </Compile>
@@ -177,6 +180,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\InitPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Uc\BoxView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
