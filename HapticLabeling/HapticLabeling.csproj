@@ -120,6 +120,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Helper\RelayCommand.cs" />
+    <Compile Include="Model\BoundingBox.cs" />
     <Compile Include="ViewModel\ConfigPageViewModel.cs" />
     <Compile Include="View\ConfigPage.xaml.cs">
       <DependentUpon>ConfigPage.xaml</DependentUpon>

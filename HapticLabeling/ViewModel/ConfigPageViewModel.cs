@@ -1,6 +1,7 @@
 ﻿using HapticLabeling.Model;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,6 +18,20 @@ namespace HapticLabeling.ViewModel
         public MediaPlayer VideoPlayer = new MediaPlayer();
         public MediaPlayer AudioPlayer = new MediaPlayer();
         public MediaTimelineController MediaTimelineController = null;
+
+        private BoundingBox _selectedBox = null;
+        public BoundingBox SelectedBox
+        {
+            get => _selectedBox;
+            set => Set(ref _selectedBox, value);
+        }
+
+        private ObservableCollection<BoundingBox> _boxes;
+        public ObservableCollection<BoundingBox> Boxes
+        {
+            get => _boxes;
+            set => Set(ref _boxes, value);
+        }
 
         private double _mediaLength;
         public double MediaLength

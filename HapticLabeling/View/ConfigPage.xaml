@@ -10,6 +10,9 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     <Page.Resources>
         <converter:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <Style TargetType="TextBlock">
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
         <Style x:Key="ChannelIcon" TargetType="TextBlock">
             <Setter Property="FontSize" Value="20" />
             <Setter Property="VerticalAlignment" Value="Center" />
@@ -40,7 +43,7 @@
         </Grid.RowDefinitions>
         <Grid Grid.Row="0" Background="GhostWhite">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="36" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0" Spacing="5">
@@ -71,6 +74,12 @@
             </StackPanel>
             <MediaPlayerElement Grid.Column="1" x:Name="audioPlayer" />
             <MediaPlayerElement Grid.Column="1" x:Name="videoPlayer" />
+            <Grid
+                Grid.Column="1"
+                x:Name="LabelGrid"
+                Background="Transparent"
+                PointerPressed="LabelGrid_PointerPressed"
+                PointerMoved="LabelGrid_PointerMoved" />
         </Grid>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
@@ -111,8 +120,11 @@
             Visibility="{x:Bind ViewModel.ShowLabelDetail, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="80" />
                 <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="180" />
                 <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="80" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
@@ -124,31 +136,31 @@
                     <TextBlock Text="&#xE74D;" FontFamily="Segoe MDL2 Assets"/>
                 </Button.Content>
             </Button>
-            <StackPanel Grid.Column="1" Style="{StaticResource HorizontalStackPanel}">
-                <TextBlock Text="(x, y) = " />
-                <TextBlock>
-                    <Run Text="(" />
-                    <Run Text="0" />
-                    <Run Text="," />
-                    <Run Text="10" />
-                    <Run Text=")" />
-                </TextBlock>
-            </StackPanel>
-            <StackPanel Grid.Column="2" Style="{StaticResource HorizontalStackPanel}">
-                <TextBlock Text="(width, height) = " />
-                <TextBlock>
-                    <Run Text="(" />
-                    <Run Text="200" />
-                    <Run Text="," />
-                    <Run Text="100" />
-                    <Run Text=")" />
-                </TextBlock>
-            </StackPanel>
-            <StackPanel Grid.Column="3" Style="{StaticResource HorizontalStackPanel}">
-                <TextBlock Text="Name : " VerticalAlignment="Center"/>
-                <TextBox x:Name="NameTextBox" Width="150" PlaceholderText="(haptic event name)" />
-            </StackPanel>
-            <StackPanel Grid.Column="4" Style="{StaticResource HorizontalStackPanel}">
+            <TextBlock Grid.Column="1" Text="(x, y) = " HorizontalAlignment="Right" />
+            <TextBlock Grid.Column="2">
+                <Run Text="(" />
+                <Run Text="{x:Bind ViewModel.SelectedBox.X, Mode=OneWay}" />
+                <Run Text="," />
+                <Run Text="{x:Bind ViewModel.SelectedBox.Y, Mode=OneWay}" />
+                <Run Text=")" />
+            </TextBlock>
+            <TextBlock Grid.Column="3" Text="(width, height) = " HorizontalAlignment="Right" />
+            <TextBlock Grid.Column="4">
+                <Run Text="(" />
+                <Run Text="{x:Bind ViewModel.SelectedBox.Width, Mode=OneWay}" />
+                <Run Text="," />
+                <Run Text="{x:Bind ViewModel.SelectedBox.Height, Mode=OneWay}" />
+                <Run Text=")" />
+            </TextBlock>
+            <TextBlock Grid.Column="5"  Text="Name : " HorizontalAlignment="Right" />
+            <TextBox 
+                Grid.Column="6"  
+                x:Name="NameTextBox" 
+                Width="150"
+                Margin="0,8"
+                PlaceholderText="(haptic event name)" 
+                Text="{x:Bind ViewModel.SelectedBox.Name, Mode=OneWay}"/>
+            <StackPanel Grid.Column="7" Style="{StaticResource HorizontalStackPanel}">
                 <Button
                     Background="{ThemeResource SystemAccentColor}"
                     Foreground="White"
