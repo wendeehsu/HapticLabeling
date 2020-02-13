@@ -131,6 +131,7 @@
             <Button
                 Background="Red"
                 Foreground="White"
+                Click="DeleteBox_Click"
                 Style="{StaticResource UploadBtn}">
                 <Button.Content>
                     <TextBlock Text="&#xE74D;" FontFamily="Segoe MDL2 Assets"/>
@@ -139,17 +140,17 @@
             <TextBlock Grid.Column="1" Text="(x, y) = " HorizontalAlignment="Right" />
             <TextBlock Grid.Column="2">
                 <Run Text="(" />
-                <Run Text="{x:Bind ViewModel.SelectedBox.X, Mode=OneWay}" />
+                <Run x:Name="XTextBlock" Text="-" />
                 <Run Text="," />
-                <Run Text="{x:Bind ViewModel.SelectedBox.Y, Mode=OneWay}" />
+                <Run x:Name="YTextBlock" Text="-" />
                 <Run Text=")" />
             </TextBlock>
             <TextBlock Grid.Column="3" Text="(width, height) = " HorizontalAlignment="Right" />
             <TextBlock Grid.Column="4">
                 <Run Text="(" />
-                <Run Text="{x:Bind ViewModel.SelectedBox.Width, Mode=OneWay}" />
+                <Run x:Name="WidthTextBlock" Text="-" />
                 <Run Text="," />
-                <Run Text="{x:Bind ViewModel.SelectedBox.Height, Mode=OneWay}" />
+                <Run x:Name="HeightTextBlock" Text="-" />
                 <Run Text=")" />
             </TextBlock>
             <TextBlock Grid.Column="5"  Text="Name : " HorizontalAlignment="Right" />
@@ -158,13 +159,13 @@
                 x:Name="NameTextBox" 
                 Width="150"
                 Margin="0,8"
-                PlaceholderText="(haptic event name)" 
-                Text="{x:Bind ViewModel.SelectedBox.Name, Mode=OneWay}"/>
+                PlaceholderText="(haptic event name)" />
             <StackPanel Grid.Column="7" Style="{StaticResource HorizontalStackPanel}">
                 <Button
                     Background="{ThemeResource SystemAccentColor}"
                     Foreground="White"
-                    Style="{StaticResource UploadBtn}">
+                    Style="{StaticResource UploadBtn}"
+                    Click="SaveBox_Click">
                     <Button.Content>
                         <TextBlock Text="&#xE74E;" FontFamily="Segoe MDL2 Assets"/>
                     </Button.Content>

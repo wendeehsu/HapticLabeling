@@ -1,5 +1,6 @@
 ﻿using System;
 using HapticLabeling.Model;
+using HapticLabeling.View.Uc;
 using HapticLabeling.ViewModel;
 using Windows.Media;
 using Windows.UI.Xaml;
@@ -11,7 +12,6 @@ namespace HapticLabeling.View
     public sealed partial class ConfigPage : Page
     {
         private bool _isAddingEvent = false;
-        private bool _isScaling = false;
         public ConfigPageViewModel ViewModel = new ConfigPageViewModel();
 
         public ConfigPage()
@@ -20,7 +20,7 @@ namespace HapticLabeling.View
             ViewModel.Init();
             ViewModel.MediaTimelineController.PositionChanged += MediaTimelineController_PositionChanged;
         }
-
+        #region Media Control
         private async void MediaTimelineController_PositionChanged(MediaTimelineController sender, object args)
         {
             if (ViewModel.MediaLength != 0)
@@ -34,7 +34,7 @@ namespace HapticLabeling.View
 
         private void BackBtn_Clicked(object sender, RoutedEventArgs e)
         {
-            this.Frame.Navigate(typeof(InitPage));
+            Frame.Navigate(typeof(InitPage));
         }
 
         private async void UploadVideo_Click(object sender, RoutedEventArgs e)
@@ -71,18 +71,17 @@ namespace HapticLabeling.View
             ViewModel.ShowPauseBtn = false;
             ViewModel.PauseMedia();
         }
-
+        #endregion
+        
         private void CancelLabel_Click(object sender, RoutedEventArgs e)
         {
             _isAddingEvent = false;
-            _isScaling = false;
             ViewModel.ShowLabelDetail = false;
-            ViewModel.SelectedBox = null;
+            ViewModel.CurrentIndex = -1;
         }
 
         private void AddHapticLabel_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
         {
-            ViewModel.SelectedBox = new BoundingBox(0,0);
             ViewModel.ShowLabelDetail = true;
             _isAddingEvent = true;
         }
@@ -96,18 +95,39 @@ namespace HapticLabeling.View
             x = Math.Round(x, 2);
             y = Math.Round(y, 2);
 
-            if (!_isScaling)
+            if (ViewModel.CurrentIndex == -1)
             {
-                ViewModel.SelectedBox.X = x;
-                ViewModel.SelectedBox.Y = y;
-                _isScaling = true;
+                XTextBlock.Text = x.ToString();
+                YTextBlock.Text = y.ToString();
+
+                // Append Box in ui
+                var box = new BoxView();
+                box.BoundingBox = new BoundingBox(x, y);
+
+                var index = ViewModel.GetInsertIndex(box.BoundingBox);
+                if (index == -1)
+                {
+                    LabelGrid.Children.Add(box);
+                }
+                else
+                {
+                    LabelGrid.Children.Insert(index, box);
+                }
+
+                ViewModel.CurrentIndex = LabelGrid.Children.IndexOf(box);
             }
             else
             {
                 // Set width, height
-                ViewModel.SelectedBox.Width = x - ViewModel.SelectedBox.X;
-                ViewModel.SelectedBox.Height = y - ViewModel.SelectedBox.Y;
-                _isScaling = false;
+                var width = x - ViewModel.Boxes[ViewModel.CurrentIndex].X;
+                var height = y - ViewModel.Boxes[ViewModel.CurrentIndex].Y;
+                WidthTextBlock.Text = width.ToString();
+                HeightTextBlock.Text = height.ToString();
+
+                ViewModel.SetBoxSize(width, height);
+                var box = LabelGrid.Children[ViewModel.CurrentIndex] as BoxView;
+                box.SetSize(width, height);
+                
                 _isAddingEvent = false;
             }
         }
@@ -121,16 +141,49 @@ namespace HapticLabeling.View
             x = Math.Round(x, 2);
             y = Math.Round(y, 2);
 
-            if (!_isScaling)
+            if (ViewModel.CurrentIndex == -1)
             {
-                ViewModel.SelectedBox.X = x;
-                ViewModel.SelectedBox.Y = y;
+                XTextBlock.Text = x.ToString();
+                YTextBlock.Text = y.ToString();
             }
             else
             {
-                ViewModel.SelectedBox.Width = x - ViewModel.SelectedBox.X;
-                ViewModel.SelectedBox.Height = y - ViewModel.SelectedBox.Y;
+                var width = x - ViewModel.Boxes[ViewModel.CurrentIndex].X;
+                var height = y - ViewModel.Boxes[ViewModel.CurrentIndex].Y;
+                WidthTextBlock.Text = width.ToString();
+                HeightTextBlock.Text = height.ToString();
+
+                var box = LabelGrid.Children[ViewModel.CurrentIndex] as BoxView;
+                box.SetSize(width, height);
             }
+        }
+
+        private void DeleteBox_Click(object sender, RoutedEventArgs e)
+        {
+            var index = ViewModel.CurrentIndex;
+            if (index == -1) return;
+            LabelGrid.Children.RemoveAt(index);
+            ViewModel.Boxes.RemoveAt(index);
+            ViewModel.ShowLabelDetail = false;
+            ViewModel.CurrentIndex = -1;
+        }
+
+        private void SaveBox_Click(object sender, RoutedEventArgs e)
+        {
+            var index = ViewModel.CurrentIndex;
+            if (index == -1) return;
+            ViewModel.Boxes[index].Name = NameTextBox.Text;
+
+            var box = LabelGrid.Children[index] as BoxView;
+            box.BoundingBox = ViewModel.Boxes[index];
+
+//            label.RemoveHighlight();
+
+            LabelGrid.Children.RemoveAt(index);
+            LabelGrid.Children.Insert(index, box);
+
+            ViewModel.CurrentIndex = -1;
+            ViewModel.ShowLabelDetail = false;
         }
     }
 }

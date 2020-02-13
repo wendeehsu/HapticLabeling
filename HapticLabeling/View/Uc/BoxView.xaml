@@ -6,8 +6,16 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-    <Rectangle
-        x:Name="rect"
-        StrokeThickness="3"
-        Stroke="Red" />
+    <StackPanel>
+        <TextBlock x:Name="y" Height="0" />
+        <StackPanel Orientation="Horizontal">
+            <TextBlock x:Name="x" Width="0"/>
+            <Rectangle
+                x:Name="rect"
+                StrokeThickness="3"
+                Stroke="Red"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top" />  
+        </StackPanel>
+    </StackPanel>
 </UserControl>

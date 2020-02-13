@@ -18,20 +18,8 @@ namespace HapticLabeling.ViewModel
         public MediaPlayer VideoPlayer = new MediaPlayer();
         public MediaPlayer AudioPlayer = new MediaPlayer();
         public MediaTimelineController MediaTimelineController = null;
-
-        private BoundingBox _selectedBox = null;
-        public BoundingBox SelectedBox
-        {
-            get => _selectedBox;
-            set => Set(ref _selectedBox, value);
-        }
-
-        private ObservableCollection<BoundingBox> _boxes;
-        public ObservableCollection<BoundingBox> Boxes
-        {
-            get => _boxes;
-            set => Set(ref _boxes, value);
-        }
+        public int CurrentIndex = -1;
+        public List<BoundingBox> Boxes = new List<BoundingBox>();
 
         private double _mediaLength;
         public double MediaLength
@@ -64,6 +52,7 @@ namespace HapticLabeling.ViewModel
             AudioPlayer.TimelineController = MediaTimelineController;
         }
 
+        #region Media Player
         public async Task UploadVideo()
         {
             var openPicker = new FileOpenPicker
@@ -133,7 +122,52 @@ namespace HapticLabeling.ViewModel
         {
             MediaTimelineController.Pause();
         }
+        #endregion
 
+        public int GetInsertIndex(BoundingBox _box)
+        {
+            var insertIndex = -1;
+            if (Boxes == null || Boxes.Count == 0)
+            {
+                insertIndex = 0;
+            }
+            else
+            {
+                for (var i = 0; i < Boxes.Count; i++)
+                {
+                    if (Boxes[i].X < _box.X)
+                    {
+                        if (i == 0)
+                        {
+                            insertIndex = 0;
+                            break;
+                        }
+                        else if (Boxes[i - 1].X >= _box.X)
+                        {
+                            insertIndex = i;
+                            break;
+                        }
+                    }
+                }
+            }
 
+            if (insertIndex == -1)
+            {
+                Boxes.Add(_box);
+            }
+            else
+            {
+                Boxes.Insert(insertIndex, _box);
+            }
+
+            return insertIndex;
+        }
+
+        public void SetBoxSize(double width, double height)
+        {
+            if (CurrentIndex == -1) return;
+            Boxes[CurrentIndex].Width = width;
+            Boxes[CurrentIndex].Height = height;
+        }
     }
 }
