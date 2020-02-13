@@ -15,7 +15,7 @@ namespace HapticLabeling.ViewModel
 {
     public class EventPageViewModel : Observable
     {
-        public int CurrentiIndex = -1;
+        public int CurrentIndex = -1;
         public List<Event> Events = new List<Event>();
         public List<HapticEvent> HapticEvents = new List<HapticEvent>();
         public MediaPlayer VideoPlayer = new MediaPlayer();

@@ -87,7 +87,7 @@ namespace HapticLabeling.View
                 LabelGrid.Children.Insert(index, label);
             }
 
-            ViewModel.CurrentiIndex = LabelGrid.Children.IndexOf(label);
+            ViewModel.CurrentIndex = LabelGrid.Children.IndexOf(label);
         }
 
         private void Label_Tapped(object sender, TappedRoutedEventArgs e)
@@ -99,7 +99,7 @@ namespace HapticLabeling.View
 
             var index = ViewModel.HapticEvents.IndexOf(label.Event);
             if (index == -1) return;
-            ViewModel.CurrentiIndex = index;
+            ViewModel.CurrentIndex = index;
             StartTimeTextBlock.Text = ViewModel.HapticEvents[index].StartTime.ToString();
             DurationTextBlock.Text = ViewModel.HapticEvents[index].Duration.ToString();
             NameTextBox.Text = ViewModel.HapticEvents[index].Name.ToString();
@@ -108,7 +108,7 @@ namespace HapticLabeling.View
 
         private void SetLabelDuration()
         {
-            var index = ViewModel.CurrentiIndex;
+            var index = ViewModel.CurrentIndex;
             if (index == -1) return;
             var label = LabelGrid.Children[index] as HapticLabelMark;
             var duration = PositionSlider.Value - label.Event.StartTime;
@@ -136,7 +136,7 @@ namespace HapticLabeling.View
 
         private void DeleteLabel_Click(object sender, RoutedEventArgs e)
         {
-            var index = ViewModel.CurrentiIndex;
+            var index = ViewModel.CurrentIndex;
             if (index == -1) return;
             LabelGrid.Children.RemoveAt(index);
             ViewModel.HapticEvents.RemoveAt(index);
@@ -145,7 +145,7 @@ namespace HapticLabeling.View
 
         private void SaveLabel_Click(object sender, RoutedEventArgs e)
         {
-            var index = ViewModel.CurrentiIndex;
+            var index = ViewModel.CurrentIndex;
             if (index == -1) return;
             ViewModel.HapticEvents[index].Name = NameTextBox.Text;
             ViewModel.HapticEvents[index].Value = ValueTextBox.Text;
@@ -161,7 +161,7 @@ namespace HapticLabeling.View
 
         private void CancelLabel_Click(object sender, RoutedEventArgs e)
         {
-            var label = LabelGrid.Children[ViewModel.CurrentiIndex] as HapticLabelMark;
+            var label = LabelGrid.Children[ViewModel.CurrentIndex] as HapticLabelMark;
             label.RemoveHighlight();
             ViewModel.ShowLabelDetail = false;
         }
