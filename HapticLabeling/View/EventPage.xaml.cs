@@ -94,7 +94,7 @@ namespace HapticLabeling.View
         {
             RemoveAllHighLights();
             var label = sender as HapticLabelMark;
-            label.HightLight();
+            label.HighLight();
             ViewModel.ShowLabelDetail = true;
 
             var index = ViewModel.HapticEvents.IndexOf(label.Event);

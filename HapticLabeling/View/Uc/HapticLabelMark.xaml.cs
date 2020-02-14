@@ -48,7 +48,7 @@ namespace HapticLabeling.View
             DurationLine.X2 = Event.EventDuration;
         }
 
-        public void HightLight()
+        public void HighLight()
         {
             Ellipse.Stroke = new SolidColorBrush(Colors.Red);
             DurationLine.Stroke = new SolidColorBrush(Colors.Red);
