@@ -1,22 +1,13 @@
 ﻿using HapticLabeling.Model;
+using Windows.UI;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Shapes;
 
 namespace HapticLabeling.View.Uc
 {
     public sealed partial class BoxView : UserControl
     {
-        public double BoxWidth
-        {
-            get => rect.Width;
-            set => rect.Width = value;
-        }
-
-        public double BoxHeight
-        {
-            get => rect.Height;
-            set => rect.Height = value;
-        }
-
         private BoundingBox _boundingBox;
         public BoundingBox BoundingBox
         {
@@ -38,8 +29,18 @@ namespace HapticLabeling.View.Uc
             if (width < 0 || height < 0) return;
             this.BoundingBox.Width = width;
             this.BoundingBox.Height = height;
-            BoxWidth = width;
-            BoxHeight = height;
+            rect.Width = width;
+            rect.Height = height;
+        }
+
+        public void RemoveHighLight()
+        {
+            rect.Stroke = new SolidColorBrush(Colors.Red);
+        }
+
+        public void HighLight()
+        {
+            rect.Stroke = new SolidColorBrush(Colors.LightGreen);
         }
 
         public BoxView()

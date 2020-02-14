@@ -127,14 +127,11 @@ namespace HapticLabeling.ViewModel
         public int GetInsertIndex(BoundingBox _box)
         {
             var insertIndex = -1;
-            if (Boxes == null || Boxes.Count == 0)
-            {
-                insertIndex = 0;
-            }
-            else
+            if (Boxes != null && Boxes.Count != 0)
             {
                 for (var i = 0; i < Boxes.Count; i++)
                 {
+                    // larger x should be placed at the lower level
                     if (Boxes[i].X < _box.X)
                     {
                         if (i == 0)

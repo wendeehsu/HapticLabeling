@@ -75,6 +75,8 @@ namespace HapticLabeling.View
         
         private void CancelLabel_Click(object sender, RoutedEventArgs e)
         {
+            var box = LabelGrid.Children[ViewModel.CurrentIndex] as BoxView;
+            box.RemoveHighLight();
             _isAddingEvent = false;
             ViewModel.ShowLabelDetail = false;
             ViewModel.CurrentIndex = -1;
@@ -82,6 +84,11 @@ namespace HapticLabeling.View
 
         private void AddHapticLabel_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
         {
+            XTextBlock.Text = "-";
+            YTextBlock.Text = "-";
+            WidthTextBlock.Text = "-";
+            HeightTextBlock.Text = "-";
+            NameTextBox.Text = "";
             ViewModel.ShowLabelDetail = true;
             _isAddingEvent = true;
         }
@@ -114,7 +121,7 @@ namespace HapticLabeling.View
                     LabelGrid.Children.Insert(index, box);
                 }
 
-                ViewModel.CurrentIndex = LabelGrid.Children.IndexOf(box);
+                ViewModel.CurrentIndex = index;
             }
             else
             {
@@ -127,7 +134,8 @@ namespace HapticLabeling.View
                 ViewModel.SetBoxSize(width, height);
                 var box = LabelGrid.Children[ViewModel.CurrentIndex] as BoxView;
                 box.SetSize(width, height);
-                
+                box.Tapped += Box_Tapped;
+
                 _isAddingEvent = false;
             }
         }
@@ -161,10 +169,11 @@ namespace HapticLabeling.View
         private void DeleteBox_Click(object sender, RoutedEventArgs e)
         {
             var index = ViewModel.CurrentIndex;
+            ViewModel.ShowLabelDetail = false;
+         
             if (index == -1) return;
             LabelGrid.Children.RemoveAt(index);
             ViewModel.Boxes.RemoveAt(index);
-            ViewModel.ShowLabelDetail = false;
             ViewModel.CurrentIndex = -1;
         }
 
@@ -176,14 +185,48 @@ namespace HapticLabeling.View
 
             var box = LabelGrid.Children[index] as BoxView;
             box.BoundingBox = ViewModel.Boxes[index];
-
-//            label.RemoveHighlight();
+            box.RemoveHighLight();
 
             LabelGrid.Children.RemoveAt(index);
             LabelGrid.Children.Insert(index, box);
 
             ViewModel.CurrentIndex = -1;
             ViewModel.ShowLabelDetail = false;
+        }
+
+        private void Box_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        {
+            if (_isAddingEvent) return;
+            var box = sender as BoxView;
+            var position = Window.Current.CoreWindow.PointerPosition;
+            var x = position.X - Window.Current.Bounds.X - 36;
+            var y = position.Y - Window.Current.Bounds.Y;
+            if (x < box.BoundingBox.X ||
+                y < box.BoundingBox.Y) return;
+
+            RemoveAllHighLights();
+            box.HighLight();
+            ViewModel.ShowLabelDetail = true;
+
+            var index = ViewModel.Boxes.IndexOf(box.BoundingBox);
+            if (index == -1) return;
+            ViewModel.CurrentIndex = index;
+            
+            var boundingBox = box.BoundingBox;
+            XTextBlock.Text = boundingBox.X.ToString();
+            YTextBlock.Text = boundingBox.Y.ToString();
+            WidthTextBlock.Text = boundingBox.Width.ToString();
+            HeightTextBlock.Text = boundingBox.Height.ToString();
+            NameTextBox.Text = boundingBox.Name.ToString();
+        }
+
+        private void RemoveAllHighLights()
+        {
+            for (int i = 0; i < LabelGrid.Children.Count; i++)
+            {
+                var box = LabelGrid.Children[i] as BoxView;
+                box.RemoveHighLight();
+            }
         }
     }
 }

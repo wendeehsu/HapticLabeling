@@ -3,9 +3,6 @@ namespace HapticLabeling.Model
 {
     public class BoundingBox : Observable
     {
-        public double leftPos;
-        public double topPos;
-
         private double _x;
         public double X
         {
@@ -43,8 +40,8 @@ namespace HapticLabeling.Model
         
         public BoundingBox(double x, double y)
         {
-            this.X = x;
-            this.Y = y;
+            X = x;
+            Y = y;
         }
     }
 }
