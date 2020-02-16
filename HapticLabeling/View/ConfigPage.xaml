@@ -71,6 +71,16 @@
                         <TextBlock Text="&#xEC4F;" FontFamily="Segoe MDL2 Assets"/>
                     </Button.Content>
                 </Button>
+                <Button
+                    Background="Transparent"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Bottom"
+                    ToolTipService.ToolTip="Download"
+                    Click="Download_Click">
+                    <Button.Content>
+                        <TextBlock Text="&#xE896;" FontFamily="Segoe MDL2 Assets"/>
+                    </Button.Content>
+                </Button>
             </StackPanel>
             <MediaPlayerElement Grid.Column="1" x:Name="audioPlayer" />
             <MediaPlayerElement Grid.Column="1" x:Name="videoPlayer" />
@@ -186,10 +196,15 @@
             Background="{ThemeResource SystemAccentColor}"
             Visibility="{x:Bind ViewModel.ShowLabelDetail, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=Inverse}">
             <TextBlock 
-                Text="&#xE948;" 
+                Text="+ Box" 
                 VerticalAlignment="Center"
                 HorizontalAlignment="Center"
-                FontFamily="Segoe MDL2 Assets"/>
+                Visibility="{x:Bind ViewModel.HasRange, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" />
+            <TextBlock 
+                Text="Click and draw the screen range" 
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center"
+                Visibility="{x:Bind ViewModel.HasRange, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=Inverse}" />
         </Grid>
     </Grid>
 </Page>

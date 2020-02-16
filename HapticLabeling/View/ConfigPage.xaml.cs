@@ -19,7 +19,8 @@ namespace HapticLabeling.View
             this.InitializeComponent();
             ViewModel.Init();
             ViewModel.MediaTimelineController.PositionChanged += MediaTimelineController_PositionChanged;
-        }
+        }      
+
         #region Media Control
         private async void MediaTimelineController_PositionChanged(MediaTimelineController sender, object args)
         {
@@ -79,16 +80,24 @@ namespace HapticLabeling.View
             box.RemoveHighLight();
             _isAddingEvent = false;
             ViewModel.ShowLabelDetail = false;
+
+            if (!ViewModel.HasRange)
+            {
+                ViewModel.RangeBox = null;
+                LabelGrid.Children.Clear();
+            }
+
             ViewModel.CurrentIndex = -1;
         }
 
         private void AddHapticLabel_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
         {
+            ViewModel.SetOriginSize(videoPlayer.ActualHeight, videoPlayer.ActualWidth);
             XTextBlock.Text = "-";
             YTextBlock.Text = "-";
             WidthTextBlock.Text = "-";
             HeightTextBlock.Text = "-";
-            NameTextBox.Text = "";
+            NameTextBox.Text = ViewModel.HasRange ? "" : "Range box";
             ViewModel.ShowLabelDetail = true;
             _isAddingEvent = true;
         }
@@ -104,38 +113,58 @@ namespace HapticLabeling.View
 
             if (ViewModel.CurrentIndex == -1)
             {
-                XTextBlock.Text = x.ToString();
-                YTextBlock.Text = y.ToString();
+                XTextBlock.Text = ViewModel.GetX(x).ToString();
+                YTextBlock.Text = ViewModel.GetY(y).ToString();
 
                 // Append Box in ui
                 var box = new BoxView();
                 box.BoundingBox = new BoundingBox(x, y);
 
-                var index = ViewModel.GetInsertIndex(box.BoundingBox);
-                if (index == -1)
+                if (ViewModel.HasRange)
                 {
-                    LabelGrid.Children.Add(box);
+                    var index = ViewModel.GetInsertIndex(box.BoundingBox);
+                    if (index == -1)
+                    {
+                        LabelGrid.Children.Add(box);
+                    }
+                    else
+                    {
+                        LabelGrid.Children.Insert(index, box);
+                    }
+
+                    ViewModel.CurrentIndex = index;
                 }
                 else
                 {
-                    LabelGrid.Children.Insert(index, box);
+                    LabelGrid.Children.Add(box);
+                    ViewModel.RangeBox = box.BoundingBox;
+                    ViewModel.CurrentIndex = 0;
                 }
-
-                ViewModel.CurrentIndex = index;
             }
             else
             {
                 // Set width, height
-                var width = x - ViewModel.Boxes[ViewModel.CurrentIndex].X;
-                var height = y - ViewModel.Boxes[ViewModel.CurrentIndex].Y;
-                WidthTextBlock.Text = width.ToString();
-                HeightTextBlock.Text = height.ToString();
+                double width = 0;
+                double height = 0;
+                if (ViewModel.HasRange)
+                {
+                    width = x - ViewModel.Boxes[ViewModel.CurrentIndex].X;
+                    height = y - ViewModel.Boxes[ViewModel.CurrentIndex].Y;
+                    ViewModel.SetBoxSize(width, height);
+                    var box = LabelGrid.Children[ViewModel.CurrentIndex] as BoxView;
+                    box.SetSize(width, height);
+                    box.Tapped += Box_Tapped;
+                }
+                else
+                {
+                    width = x - ViewModel.RangeBox.X;
+                    height = y - ViewModel.RangeBox.Y;
+                    ViewModel.RangeBox.Height = height;
+                    ViewModel.RangeBox.Width = width;
+                }
 
-                ViewModel.SetBoxSize(width, height);
-                var box = LabelGrid.Children[ViewModel.CurrentIndex] as BoxView;
-                box.SetSize(width, height);
-                box.Tapped += Box_Tapped;
-
+                WidthTextBlock.Text = ViewModel.GetWidth(width).ToString();
+                HeightTextBlock.Text = ViewModel.GetHeight(height).ToString();
                 _isAddingEvent = false;
             }
         }
@@ -151,15 +180,26 @@ namespace HapticLabeling.View
 
             if (ViewModel.CurrentIndex == -1)
             {
-                XTextBlock.Text = x.ToString();
-                YTextBlock.Text = y.ToString();
+                XTextBlock.Text = ViewModel.GetX(x).ToString();
+                YTextBlock.Text = ViewModel.GetY(y).ToString();
             }
             else
             {
-                var width = x - ViewModel.Boxes[ViewModel.CurrentIndex].X;
-                var height = y - ViewModel.Boxes[ViewModel.CurrentIndex].Y;
-                WidthTextBlock.Text = width.ToString();
-                HeightTextBlock.Text = height.ToString();
+                double width = 0;
+                double height = 0;
+                if (ViewModel.HasRange)
+                {
+                    width = x - ViewModel.Boxes[ViewModel.CurrentIndex].X;
+                    height = y - ViewModel.Boxes[ViewModel.CurrentIndex].Y;
+                }
+                else
+                {
+                    width = x - ViewModel.RangeBox.X;
+                    height = y - ViewModel.RangeBox.Y;
+                }
+                
+                WidthTextBlock.Text = ViewModel.GetWidth(width).ToString();
+                HeightTextBlock.Text = ViewModel.GetHeight(height).ToString();
 
                 var box = LabelGrid.Children[ViewModel.CurrentIndex] as BoxView;
                 box.SetSize(width, height);
@@ -173,7 +213,16 @@ namespace HapticLabeling.View
          
             if (index == -1) return;
             LabelGrid.Children.RemoveAt(index);
-            ViewModel.Boxes.RemoveAt(index);
+
+            if (ViewModel.HasRange)
+            {
+                ViewModel.Boxes.RemoveAt(index);
+            }
+            else
+            {
+                ViewModel.RangeBox = null;
+            }
+            
             ViewModel.CurrentIndex = -1;
         }
 
@@ -181,14 +230,22 @@ namespace HapticLabeling.View
         {
             var index = ViewModel.CurrentIndex;
             if (index == -1) return;
-            ViewModel.Boxes[index].Name = NameTextBox.Text;
+            if (ViewModel.HasRange)
+            {
+                ViewModel.Boxes[index].Name = NameTextBox.Text;
 
-            var box = LabelGrid.Children[index] as BoxView;
-            box.BoundingBox = ViewModel.Boxes[index];
-            box.RemoveHighLight();
+                var box = LabelGrid.Children[index] as BoxView;
+                box.BoundingBox = ViewModel.Boxes[index];
+                box.RemoveHighLight();
 
-            LabelGrid.Children.RemoveAt(index);
-            LabelGrid.Children.Insert(index, box);
+                LabelGrid.Children.RemoveAt(index);
+                LabelGrid.Children.Insert(index, box);
+            }
+            else
+            {
+                LabelGrid.Children.RemoveAt(index);
+                ViewModel.HasRange = true;
+            }
 
             ViewModel.CurrentIndex = -1;
             ViewModel.ShowLabelDetail = false;
@@ -213,10 +270,10 @@ namespace HapticLabeling.View
             ViewModel.CurrentIndex = index;
             
             var boundingBox = box.BoundingBox;
-            XTextBlock.Text = boundingBox.X.ToString();
-            YTextBlock.Text = boundingBox.Y.ToString();
-            WidthTextBlock.Text = boundingBox.Width.ToString();
-            HeightTextBlock.Text = boundingBox.Height.ToString();
+            XTextBlock.Text = ViewModel.GetX(boundingBox.X).ToString();
+            YTextBlock.Text = ViewModel.GetY(boundingBox.Y).ToString();
+            WidthTextBlock.Text = ViewModel.GetWidth(boundingBox.Width).ToString();
+            HeightTextBlock.Text = ViewModel.GetHeight(boundingBox.Height).ToString();
             NameTextBox.Text = boundingBox.Name.ToString();
         }
 
@@ -227,6 +284,11 @@ namespace HapticLabeling.View
                 var box = LabelGrid.Children[i] as BoxView;
                 box.RemoveHighLight();
             }
+        }
+
+        private async void Download_Click(object sender, RoutedEventArgs e)
+        {
+            await ViewModel.DownloadConfigBox();
         }
     }
 }

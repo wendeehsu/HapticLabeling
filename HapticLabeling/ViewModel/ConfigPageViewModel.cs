@@ -1,4 +1,5 @@
 ﻿using HapticLabeling.Model;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 using Windows.Media;
 using Windows.Media.Core;
 using Windows.Media.Playback;
+using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.UI.Xaml;
 
@@ -20,12 +22,22 @@ namespace HapticLabeling.ViewModel
         public MediaTimelineController MediaTimelineController = null;
         public int CurrentIndex = -1;
         public List<BoundingBox> Boxes = new List<BoundingBox>();
+        public BoundingBox RangeBox;
+        public double OriginHeight = 0;
+        public double OriginWidth = 0;
 
         private double _mediaLength;
         public double MediaLength
         {
             get => _mediaLength;
             set => Set(ref _mediaLength, value);
+        }
+
+        private bool _hasRange;
+        public bool HasRange
+        {
+            get => _hasRange;
+            set => Set(ref _hasRange, value);
         }
 
         private bool _showPauseBtn;
@@ -40,6 +52,12 @@ namespace HapticLabeling.ViewModel
         {
             get => _showLabelDetail;
             set => Set(ref _showLabelDetail, value);
+        }
+
+        public void SetOriginSize(double h, double w)
+        {
+            OriginHeight = h;
+            OriginWidth = w;
         }
 
         public void Init()
@@ -165,6 +183,59 @@ namespace HapticLabeling.ViewModel
             if (CurrentIndex == -1) return;
             Boxes[CurrentIndex].Width = width;
             Boxes[CurrentIndex].Height = height;
+        }
+
+        public async Task DownloadConfigBox()
+        {
+            var result = new List<JsonBox>();
+            for(var i = 0; i < Boxes.Count; i ++)
+            {
+                result.Add(new JsonBox
+                (
+                    GetX(Boxes[i].X), 
+                    GetY(Boxes[i].Y), 
+                    GetWidth(Boxes[i].Width), 
+                    GetHeight(Boxes[i].Height), 
+                    Boxes[i].Name
+                ));
+            }
+            var json = JsonConvert.SerializeObject(result);
+            var savePicker = new FileSavePicker();
+            savePicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
+            savePicker.FileTypeChoices.Add("Plain Text", new List<string>() { ".json" });
+            savePicker.SuggestedFileName = DateTime.Now.ToString("HHmmss_MMdd") + "_config";
+            StorageFile file = await savePicker.PickSaveFileAsync();
+            if (file != null)
+            {
+                CachedFileManager.DeferUpdates(file);
+                await FileIO.WriteTextAsync(file, json);
+                Windows.Storage.Provider.FileUpdateStatus status =
+                    await CachedFileManager.CompleteUpdatesAsync(file);
+            }
+        }
+
+        public double GetX(double x)
+        {
+            if (!HasRange) return x;
+            return Math.Round((x - RangeBox.X) / RangeBox.Width, 4) * 100;
+        }
+
+        public double GetY(double y)
+        {
+            if (!HasRange) return y;
+            return Math.Round((y - RangeBox.Y) / RangeBox.Height, 4) * 100;
+        }
+
+        public double GetWidth(double w)
+        {
+            if (!HasRange) return w;
+            return Math.Round(w/RangeBox.Width, 4) * 100;
+        }
+
+        public double GetHeight(double h)
+        {
+            if (!HasRange) return h;
+            return Math.Round(h / RangeBox.Height, 4) * 100;
         }
     }
 }
