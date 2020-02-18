@@ -217,5 +217,36 @@ namespace HapticLabeling.ViewModel
 
             return insertIndex;
         }
+
+        public async Task DownloadLabeledEvent()
+        {
+            var result = new List<JsonHapticLabel>();
+            for (var i = 0; i < HapticEvents.Count; i++)
+            {
+                result.Add(new JsonHapticLabel(
+                    HapticEvents[i].StartTime, 
+                    HapticEvents[i].Duration, 
+                    HapticEvents[i].Name
+                ));
+            }
+            var json = JsonConvert.SerializeObject(result);
+            await SaveJson(json, "hapticLabel");
+        }
+
+        public async Task SaveJson(string json, string filename)
+        {
+            var savePicker = new FileSavePicker();
+            savePicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
+            savePicker.FileTypeChoices.Add("Plain Text", new List<string>() { ".json" });
+            savePicker.SuggestedFileName = DateTime.Now.ToString("HHmmss_MMdd") + "_" + filename;
+            StorageFile file = await savePicker.PickSaveFileAsync();
+            if (file != null)
+            {
+                CachedFileManager.DeferUpdates(file);
+                await FileIO.WriteTextAsync(file, json);
+                Windows.Storage.Provider.FileUpdateStatus status =
+                    await CachedFileManager.CompleteUpdatesAsync(file);
+            }
+        }
     }
 }

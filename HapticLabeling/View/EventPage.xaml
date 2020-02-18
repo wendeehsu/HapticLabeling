@@ -10,6 +10,9 @@
     Background="White">
     <Page.Resources>
         <converter:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <Style TargetType="CheckBox">
+            <Setter Property="Margin" Value="9,0" />
+        </Style>
         <Style x:Key="ChannelIcon" TargetType="TextBlock">
             <Setter Property="FontSize" Value="20" />
             <Setter Property="VerticalAlignment" Value="Center" />
@@ -17,6 +20,7 @@
             <Setter Property="FontFamily" Value="Segoe MDL2 Assets" />
         </Style>
         <Style x:Key="UploadBtn" TargetType="Button">
+            <Setter Property="Background" Value="Transparent" />
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="HorizontalAlignment" Value="Center" />
         </Style>
@@ -35,19 +39,70 @@
     <Grid Background="LightGray">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="40" />
             <RowDefinition Height="50" />
             <RowDefinition Height="60" />
             <RowDefinition Height="50" />
         </Grid.RowDefinitions>
         <Grid Grid.Row="0" Background="GhostWhite">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="40" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <MediaPlayerElement Grid.Column="1" x:Name="audioPlayer" />
-            <MediaPlayerElement Grid.Column="1"  x:Name="videoPlayer" />
-            <Grid Grid.Column="1"  Background="GhostWhite" Visibility="{x:Bind ViewModel.EnableVideo, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=Inverse}">
+            <StackPanel 
+                Spacing="5" 
+                Background="LightGray">
+                <Button
+                    Background="Transparent"
+                    Style="{StaticResource UploadBtn}"
+                    Click="BackBtn_Clicked">
+                    <Button.Content>
+                        <TextBlock Text="&#xE72B;" FontFamily="Segoe MDL2 Assets"/>
+                    </Button.Content>
+                </Button>
+                <TextBlock Text="--" HorizontalAlignment="Center" />
+                <Button
+                    Style="{StaticResource UploadBtn}"
+                    ToolTipService.ToolTip="Upload video"
+                    Click="UploadVideo_Click">
+                    <Button.Content>
+                        <TextBlock Text="&#xE714;" FontFamily="Segoe MDL2 Assets"/>
+                    </Button.Content>
+                </Button>
+                <CheckBox IsChecked="{x:Bind ViewModel.EnableVideo, Mode=TwoWay}" />
+                <TextBlock Text="--" HorizontalAlignment="Center" />
+                <Button
+                    Style="{StaticResource UploadBtn}"
+                    Click="UploadAudio_Click"
+                    ToolTipService.ToolTip="Upload Audio">
+                    <Button.Content>
+                        <TextBlock Text="&#xEC4F;" FontFamily="Segoe MDL2 Assets"/>
+                    </Button.Content>
+                </Button>
+                <CheckBox IsChecked="{x:Bind ViewModel.EnableAudio, Mode=TwoWay}" />
+                <TextBlock Text="--" HorizontalAlignment="Center" />
+                <Button
+                    Style="{StaticResource UploadBtn}"
+                    Click="UploadAction_Click"
+                    ToolTipService.ToolTip="Upload Controller">
+                    <Button.Content>
+                        <TextBlock Text="&#xE759;" FontFamily="Segoe MDL2 Assets"/>
+                    </Button.Content>
+                </Button>
+                <CheckBox IsChecked="{x:Bind ViewModel.EnableEvents, Mode=TwoWay}"/>
+                <TextBlock Text="--" HorizontalAlignment="Center" />
+                <Button
+                    Style="{StaticResource UploadBtn}"
+                    ToolTipService.ToolTip="Download"
+                    Click="Download_Click">
+                    <Button.Content>
+                        <TextBlock Text="&#xE896;" FontFamily="Segoe MDL2 Assets"/>
+                    </Button.Content>
+                </Button>
+            </StackPanel>
+            <MediaPlayerElement Grid.Column="2" x:Name="audioPlayer" />
+            <MediaPlayerElement Grid.Column="2"  x:Name="videoPlayer" />
+            <Grid Grid.Column="2"  Background="GhostWhite" Visibility="{x:Bind ViewModel.EnableVideo, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=Inverse}">
                 <TextBlock 
                     FontSize="30"
                     Text="No Screen Available"
@@ -55,59 +110,13 @@
                     VerticalAlignment="Center" />
             </Grid>
             <view:ControlStick 
-                Grid.Column="0"
+                Grid.Column="1"
                 VerticalAlignment="Bottom"
                 Visibility="{x:Bind ViewModel.EnableEvents, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" />
         </Grid>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <StackPanel Grid.Column="0" Style="{StaticResource HorizontalStackPanel}">
-                <TextBlock
-                    Text="&#xE714;"
-                    Style="{StaticResource ChannelIcon}" />
-                <Button
-                    Style="{StaticResource UploadBtn}"
-                    Click="UploadVideo_Click">
-                    <Button.Content>
-                        <TextBlock Text="&#xED25;" FontFamily="Segoe MDL2 Assets"/>
-                    </Button.Content>
-                </Button>
-                <CheckBox IsChecked="{x:Bind ViewModel.EnableVideo, Mode=TwoWay}" />
-            </StackPanel>
-            <StackPanel Grid.Column="1" Style="{StaticResource HorizontalStackPanel}">
-                <TextBlock
-                    Text="&#xEC4F;"
-                    Style="{StaticResource ChannelIcon}" />
-                <Button
-                    Style="{StaticResource UploadBtn}"
-                    Click="UploadAudio_Click">
-                    <Button.Content>
-                        <TextBlock Text="&#xED25;" FontFamily="Segoe MDL2 Assets"/>
-                    </Button.Content>
-                </Button>
-                <CheckBox IsChecked="{x:Bind ViewModel.EnableAudio, Mode=TwoWay}" />
-            </StackPanel>
-            <StackPanel Grid.Column="2" Style="{StaticResource HorizontalStackPanel}">
-                <TextBlock
-                    Text="&#xE759;"
-                    Style="{StaticResource ChannelIcon}" />
-                <Button
-                    Style="{StaticResource UploadBtn}"
-                    Click="UploadAction_Click">
-                    <Button.Content>
-                        <TextBlock Text="&#xED25;" FontFamily="Segoe MDL2 Assets"/>
-                    </Button.Content>
-                </Button>
-                <CheckBox IsChecked="{x:Bind ViewModel.EnableEvents, Mode=TwoWay}"/>
-            </StackPanel>
-        </Grid>
-        <Grid Grid.Row="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="50"/>
+                <ColumnDefinition Width="40"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Grid HorizontalAlignment="Center">
@@ -138,9 +147,9 @@
                 Maximum="{x:Bind ViewModel.MediaLength, Mode=OneWay}"
                 Style="{StaticResource TimeLineSlider}" />
         </Grid>
-        <Grid Grid.Row="3">
+        <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="50"/>
+                <ColumnDefinition Width="40"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <TextBlock 
@@ -157,15 +166,14 @@
             </Grid>
         </Grid>
         <Grid 
-            Grid.Row="4"
+            Grid.Row="3"
             Margin="20,0"
             Visibility="{x:Bind ViewModel.ShowLabelDetail, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="3*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <Button
@@ -187,13 +195,9 @@
             </StackPanel>
             <StackPanel Grid.Column="3" Style="{StaticResource HorizontalStackPanel}">
                 <TextBlock Text="Name : " VerticalAlignment="Center"/>
-                <TextBox x:Name="NameTextBox" Width="150" PlaceholderText="(haptic event name)" />
+                <TextBox x:Name="NameTextBox" Width="450" PlaceholderText="(haptic event name)" />
             </StackPanel>
             <StackPanel Grid.Column="4" Style="{StaticResource HorizontalStackPanel}">
-                <TextBlock Text="Value : " VerticalAlignment="Center"/>
-                <TextBox x:Name="ValueTextBox" Width="150" PlaceholderText="(haptic event value)" />
-            </StackPanel>
-            <StackPanel Grid.Column="5" Style="{StaticResource HorizontalStackPanel}">
                 <Button
                     Background="{ThemeResource SystemAccentColor}"
                     Foreground="White"
@@ -214,7 +218,7 @@
             </StackPanel>
         </Grid>
         <Grid 
-            Grid.Row="4" 
+            Grid.Row="3" 
             Visibility="{x:Bind ViewModel.ShowLabelDetail, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=Inverse}">
             <Grid 
                 Tapped="AddHapticLabel_Tapped"

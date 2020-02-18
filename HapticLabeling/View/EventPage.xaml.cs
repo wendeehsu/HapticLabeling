@@ -92,8 +92,12 @@ namespace HapticLabeling.View
 
         private void Label_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            RemoveAllHighLights();
             var label = sender as HapticLabelMark;
+            var position = Window.Current.CoreWindow.PointerPosition;
+            var x = position.X - Window.Current.Bounds.X - 70;
+            if (x <= label.Event.EventStartTime) return;
+
+            RemoveAllHighLights();
             label.HighLight();
             ViewModel.ShowLabelDetail = true;
 
@@ -103,7 +107,6 @@ namespace HapticLabeling.View
             StartTimeTextBlock.Text = ViewModel.HapticEvents[index].StartTime.ToString();
             DurationTextBlock.Text = ViewModel.HapticEvents[index].Duration.ToString();
             NameTextBox.Text = ViewModel.HapticEvents[index].Name.ToString();
-            ValueTextBox.Text = ViewModel.HapticEvents[index].Value.ToString();
         }
 
         private void SetLabelDuration()
@@ -148,7 +151,6 @@ namespace HapticLabeling.View
             var index = ViewModel.CurrentIndex;
             if (index == -1) return;
             ViewModel.HapticEvents[index].Name = NameTextBox.Text;
-            ViewModel.HapticEvents[index].Value = ValueTextBox.Text;
 
             var label = LabelGrid.Children[index] as HapticLabelMark;
             label.Event = ViewModel.HapticEvents[index];
@@ -173,6 +175,20 @@ namespace HapticLabeling.View
                 var label = LabelGrid.Children[i] as HapticLabelMark;
                 label.RemoveHighlight();
             }
+        }
+
+        private void BackBtn_Clicked(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(InitPage));
+        }
+
+        private async void Download_Click(object sender, RoutedEventArgs e)
+        {
+            // TODO: 
+            // 1. new controller.json
+            // 2. config file with respect to time
+            // 3. label files
+            await ViewModel.DownloadLabeledEvent();
         }
     }
 }
