@@ -190,5 +190,10 @@ namespace HapticLabeling.View
             // 3. label files
             await ViewModel.DownloadLabeledEvent();
         }
+
+        private async void UploadConfig_Click(object sender, RoutedEventArgs e)
+        {
+            await ViewModel.UploadConfig();
+        }
     }
 }

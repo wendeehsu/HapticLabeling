@@ -20,6 +20,7 @@ namespace HapticLabeling.ViewModel
         public List<Event> Events = new List<Event>();
         public List<HapticEvent> HapticEvents = new List<HapticEvent>();
         public ObservableCollection<ControllerSelection> Controllers = new ObservableCollection<ControllerSelection>();
+        public ObservableCollection<ControllerSelection> ConfigBoxes = new ObservableCollection<ControllerSelection>();
         public MediaPlayer VideoPlayer = new MediaPlayer();
         public MediaPlayer AudioPlayer = new MediaPlayer();
         public MediaTimelineController MediaTimelineController = null;
@@ -123,7 +124,7 @@ namespace HapticLabeling.ViewModel
 
             foreach(string i in controllers)
             {
-                Controllers.Add(new ControllerSelection(i));
+                Controllers.Add(new ControllerSelection() { Name = i });
             }
         }
 
@@ -191,6 +192,40 @@ namespace HapticLabeling.ViewModel
             {
                 string text = await FileIO.ReadTextAsync(file);
                 Events = JsonConvert.DeserializeObject<List<Event>>(text);
+            }
+        }
+
+        public async Task UploadConfig()
+        {
+            var openPicker = new FileOpenPicker
+            {
+                ViewMode = PickerViewMode.Thumbnail,
+                SuggestedStartLocation = PickerLocationId.PicturesLibrary
+            };
+            openPicker.FileTypeFilter.Add(".json");
+
+            var file = await openPicker.PickSingleFileAsync();
+            if (!(file is null))
+            {
+                string text = await FileIO.ReadTextAsync(file);
+                var boxes = JsonConvert.DeserializeObject<List<JsonBox>>(text);
+
+                // TODO: change "boxes" to listview and grid
+                foreach(var box in boxes)
+                {
+                    if (box.Width > 0)
+                    {
+                        ConfigBoxes.Add(new ControllerSelection { 
+                            Name = box.Name,
+                            IsChecked = true
+                        });
+                    }
+                }
+
+                foreach(var config in ConfigBoxes)
+                {
+                    config.IsChecked = true;
+                }
             }
         }
 

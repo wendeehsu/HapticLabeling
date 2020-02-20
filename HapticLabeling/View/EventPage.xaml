@@ -46,9 +46,8 @@
         <Grid Grid.Row="0" Background="GhostWhite">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="40" />
-                <ColumnDefinition Width="2*" />
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="3*" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <StackPanel 
                 Spacing="5" 
@@ -94,6 +93,15 @@
                 <TextBlock Text="--" HorizontalAlignment="Center" />
                 <Button
                     Style="{StaticResource UploadBtn}"
+                    ToolTipService.ToolTip="Upload Bounding Box Config"
+                    Click="UploadConfig_Click">
+                    <Button.Content>
+                        <TextBlock Text="&#xF617;" FontFamily="Segoe MDL2 Assets"/>
+                    </Button.Content>
+                </Button>
+                <TextBlock Text="--" HorizontalAlignment="Center" />
+                <Button
+                    Style="{StaticResource UploadBtn}"
                     ToolTipService.ToolTip="Download"
                     Click="Download_Click">
                     <Button.Content>
@@ -101,20 +109,40 @@
                     </Button.Content>
                 </Button>
             </StackPanel>
-            <view:ControlStick 
-                Grid.Column="1"
-                VerticalAlignment="Center"
-                Visibility="{x:Bind ViewModel.EnableEvents, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" />
-            <ListView Grid.Column="2" ItemsSource="{x:Bind ViewModel.Controllers, Mode=OneWay}">
-                <ListView.ItemTemplate>
-                    <DataTemplate x:DataType="converter:ControllerSelection">
-                        <CheckBox 
-                            Background="AliceBlue"
-                            Content="{x:Bind Name, Mode=OneWay}"
-                            IsChecked="{x:Bind IsChecked, Mode=OneWay}" />
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+            <Pivot Grid.Column="1">
+                <PivotItem Header="Controller">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <view:ControlStick 
+                            VerticalAlignment="Center"
+                            Visibility="{x:Bind ViewModel.EnableEvents, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" />
+                        <ListView Grid.Column="1" ItemsSource="{x:Bind ViewModel.Controllers, Mode=OneWay}">
+                            <ListView.ItemTemplate>
+                                <DataTemplate x:DataType="converter:ControllerSelection">
+                                    <CheckBox 
+                                        Background="AliceBlue"
+                                        Content="{x:Bind Name, Mode=OneWay}"
+                                        IsChecked="{x:Bind IsChecked, Mode=OneWay}" />
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </Grid>
+                </PivotItem>
+                <PivotItem Header="BoundingBox">
+                    <ListView ItemsSource="{x:Bind ViewModel.ConfigBoxes, Mode=OneWay}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="converter:ControllerSelection">
+                                <CheckBox
+                                    Content="{x:Bind Name, Mode=OneWay}"
+                                    IsChecked="{x:Bind IsChecked, Mode=OneWay}" />
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </PivotItem>
+            </Pivot>
             <Grid Grid.Column="3">
                 <MediaPlayerElement x:Name="audioPlayer" />
                 <MediaPlayerElement x:Name="videoPlayer" />

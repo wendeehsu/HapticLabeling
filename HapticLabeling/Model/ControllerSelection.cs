@@ -16,10 +16,5 @@ namespace HapticLabeling.Model
         }
 
         public string Name;
-
-        public ControllerSelection(string _name)
-        {
-            Name = _name;
-        }
     }
 }
