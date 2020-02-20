@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Windows.Media;
@@ -18,6 +19,7 @@ namespace HapticLabeling.ViewModel
         public int CurrentIndex = -1;
         public List<Event> Events = new List<Event>();
         public List<HapticEvent> HapticEvents = new List<HapticEvent>();
+        public ObservableCollection<ControllerSelection> Controllers = new ObservableCollection<ControllerSelection>();
         public MediaPlayer VideoPlayer = new MediaPlayer();
         public MediaPlayer AudioPlayer = new MediaPlayer();
         public MediaTimelineController MediaTimelineController = null;
@@ -90,6 +92,39 @@ namespace HapticLabeling.ViewModel
 
             AudioPlayer.CommandManager.IsEnabled = false;
             AudioPlayer.TimelineController = MediaTimelineController;
+
+            InitControllerSelections();
+        }
+
+        public void InitControllerSelections()
+        {
+            string[] controllers = {
+                "Left_Motor",
+                "Right_Motor",
+                "DPAD_Up",
+                "DPAD_Down",
+                "DPAD_Left",
+                "DPAD_Right",
+                "Left_Thumb",
+                "Right_Thumb",
+                "Left_Shoulder",
+                "Right_Shoulder",
+                "A",
+                "B",
+                "X",
+                "Y",
+                "LeftTrigger",
+                "RightTrigger",
+                "LeftThumbX",
+                "LeftThumbY",
+                "RightThumbX",
+                "RightThumbY"
+            };
+
+            foreach(string i in controllers)
+            {
+                Controllers.Add(new ControllerSelection(i));
+            }
         }
 
         public async Task UploadVideo()
