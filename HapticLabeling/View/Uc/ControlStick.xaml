@@ -11,6 +11,16 @@
             <Setter Property="Width" Value="30" />
             <Setter Property="VerticalAlignment" Value="Top" />
         </Style>
+        <Style x:Key="HalfCircleUpDown" TargetType="Image">
+            <Setter Property="Width" Value="17" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+        </Style>
+        <Style x:Key="HalfCircleLeftRight" TargetType="Image">
+            <Setter Property="Height" Value="17" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+        </Style>
     </UserControl.Resources>
     <Grid 
         Width="250"
@@ -46,65 +56,58 @@
         <Image
             x:Name="leftMushroonUp"
             Source="/Assets/up-circle.png"
-            HorizontalAlignment="Left"
-            Width="15"
-            VerticalAlignment="Top"
-            Visibility="Visible"
-            Margin="64,58" />
+            Style="{StaticResource HalfCircleUpDown}"
+            Visibility="Collapsed"
+            Margin="66,62" />
         <Image
             x:Name="leftMushroonDown"
             Source="/Assets/down-circle.png"
-            HorizontalAlignment="Left"
-            Width="30"
-            VerticalAlignment="Top"
+            Style="{StaticResource HalfCircleUpDown}"
             Visibility="Collapsed"
-            Margin="109,133" />
+            Margin="66,71" />
         <Image
             x:Name="leftMushroonLeft"
             Source="/Assets/left-circle.png"
-            HorizontalAlignment="Left"
-            Height="30"
-            VerticalAlignment="Top"
+            Style="{StaticResource HalfCircleLeftRight}"
             Visibility="Collapsed"
-            Margin="109,116" />
+            Margin="66,62" />
         <Image
             x:Name="leftMushroonRight"
             Source="/Assets/right-circle.png"
-            HorizontalAlignment="Left"
-            Height="30"
-            VerticalAlignment="Top"
-            Margin="125,116" />
+            Style="{StaticResource HalfCircleLeftRight}"
+            Visibility="Collapsed"
+            Margin="75,62" />
         <Image
             x:Name="rightMushroonUp"
             Source="/Assets/up-circle.png"
             HorizontalAlignment="Right"
-            Width="30"
+            Width="17"
             VerticalAlignment="Top"
             Visibility="Collapsed"
-            Margin="145,162" />
+            Margin="90,93" />
         <Image
             x:Name="rightMushroonDown"
             Source="/Assets/down-circle.png"
             HorizontalAlignment="Right"
-            Width="30"
+            Width="17"
             Visibility="Collapsed"
             VerticalAlignment="Bottom"
-            Margin="145,158"/>
+            Margin="90,89"/>
         <Image
             x:Name="rightMushroonLeft"
             Source="/Assets/left-circle.png"
             HorizontalAlignment="Right"
-            Height="30"
+            Height="17"
             VerticalAlignment="Bottom"
             Visibility="Collapsed"
-            Margin="160,157" />
+            Margin="98,90" />
         <Image
             x:Name="rightMushroonRight"
             Source="/Assets/right-circle.png"
             HorizontalAlignment="Right"
-            Height="30"
+            Height="17"
             VerticalAlignment="Bottom"
-            Margin="145,157" />
+            Margin="90,90" />
         <Grid
             x:Name="ButtonY"
             Margin="112,102"

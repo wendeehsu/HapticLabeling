@@ -2,6 +2,7 @@
 using HapticLabeling.View;
 using HapticLabeling.ViewModel;
 using System;
+using System.Diagnostics;
 using Windows.Media;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -56,6 +57,7 @@ namespace HapticLabeling.View
 
         private void Slider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
+            ViewModel.UpdateSelection(e.NewValue);
             ViewModel.MediaTimelineController.Position = TimeSpan.FromMilliseconds(e.NewValue);
         }
 
@@ -193,7 +195,14 @@ namespace HapticLabeling.View
 
         private async void UploadConfig_Click(object sender, RoutedEventArgs e)
         {
-            await ViewModel.UploadConfig();
+            try
+            {
+                await ViewModel.UploadConfig();
+            }
+            catch(Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
         }
     }
 }

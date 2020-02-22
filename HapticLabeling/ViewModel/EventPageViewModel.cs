@@ -19,7 +19,6 @@ namespace HapticLabeling.ViewModel
         public int CurrentIndex = -1;
         public List<Event> Events = new List<Event>();
         public List<HapticEvent> HapticEvents = new List<HapticEvent>();
-        public ObservableCollection<ControllerSelection> Controllers = new ObservableCollection<ControllerSelection>();
         public ObservableCollection<ControllerSelection> ConfigBoxes = new ObservableCollection<ControllerSelection>();
         public MediaPlayer VideoPlayer = new MediaPlayer();
         public MediaPlayer AudioPlayer = new MediaPlayer();
@@ -85,6 +84,13 @@ namespace HapticLabeling.ViewModel
             set => Set(ref _enableEvents, value);
         }
 
+        public ObservableCollection<ControllerSelection> _controllers = new ObservableCollection<ControllerSelection>();
+        public ObservableCollection<ControllerSelection> Controllers
+        {
+            get => _controllers;
+            set => Set(ref _controllers, value);
+        }
+
         public void Init()
         {
             MediaTimelineController = new MediaTimelineController();
@@ -94,7 +100,8 @@ namespace HapticLabeling.ViewModel
             AudioPlayer.CommandManager.IsEnabled = false;
             AudioPlayer.TimelineController = MediaTimelineController;
 
-            InitControllerSelections();
+            Controllers.Clear();
+            // InitControllerSelections();
         }
 
         public void InitControllerSelections()
@@ -137,7 +144,6 @@ namespace HapticLabeling.ViewModel
             };
             openPicker.FileTypeFilter.Add(".mp4");
             openPicker.FileTypeFilter.Add(".mov");
-            openPicker.FileTypeFilter.Add(".wmv");
         
             var file = await openPicker.PickSingleFileAsync();
             if (!(file is null))
@@ -162,6 +168,7 @@ namespace HapticLabeling.ViewModel
                 SuggestedStartLocation = PickerLocationId.PicturesLibrary
             };
             openPicker.FileTypeFilter.Add(".mp3");
+            openPicker.FileTypeFilter.Add(".wmv");
 
             var file = await openPicker.PickSingleFileAsync();
             if (!(file is null))
@@ -316,6 +323,37 @@ namespace HapticLabeling.ViewModel
                 await FileIO.WriteTextAsync(file, json);
                 Windows.Storage.Provider.FileUpdateStatus status =
                     await CachedFileManager.CompleteUpdatesAsync(file);
+            }
+        }
+
+
+        private double _prevTime = 0;
+
+        public void UpdateSelection(double timestamp)
+        {
+            double tolerence = 200;
+
+            foreach (var e in Events)
+            {
+                if (e.TimeStamp <= timestamp)
+                {
+                    if (Math.Abs(e.TimeStamp - timestamp) <= tolerence)
+                    {
+                        var newList = e.GetActiveProperty();
+                        Controllers = newList;
+                        _prevTime = timestamp;
+                        return;
+                    }
+                }
+                else
+                {
+                    break;
+                }
+            }
+            
+            if (timestamp - _prevTime > tolerence)
+            {
+                Controllers.Clear();
             }
         }
     }

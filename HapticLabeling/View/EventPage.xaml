@@ -99,7 +99,6 @@
                         <TextBlock Text="&#xF617;" FontFamily="Segoe MDL2 Assets"/>
                     </Button.Content>
                 </Button>
-                <TextBlock Text="--" HorizontalAlignment="Center" />
                 <Button
                     Style="{StaticResource UploadBtn}"
                     ToolTipService.ToolTip="Download"
@@ -120,6 +119,9 @@
                             VerticalAlignment="Center"
                             Visibility="{x:Bind ViewModel.EnableEvents, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" />
                         <ListView Grid.Column="1" ItemsSource="{x:Bind ViewModel.Controllers, Mode=OneWay}">
+                            <ListView.ItemContainerTransitions>
+                                <TransitionCollection />
+                            </ListView.ItemContainerTransitions>
                             <ListView.ItemTemplate>
                                 <DataTemplate x:DataType="converter:ControllerSelection">
                                     <CheckBox 
@@ -133,6 +135,9 @@
                 </PivotItem>
                 <PivotItem Header="BoundingBox">
                     <ListView ItemsSource="{x:Bind ViewModel.ConfigBoxes, Mode=OneWay}">
+                        <ListView.ItemContainerTransitions>
+                            <TransitionCollection />
+                        </ListView.ItemContainerTransitions>
                         <ListView.ItemTemplate>
                             <DataTemplate x:DataType="converter:ControllerSelection">
                                 <CheckBox
