@@ -127,7 +127,9 @@
                                     <CheckBox 
                                         Background="AliceBlue"
                                         Content="{x:Bind Name, Mode=OneWay}"
-                                        IsChecked="{x:Bind IsChecked, Mode=OneWay}" />
+                                        IsChecked="{x:Bind IsChecked, Mode=OneWay}"
+                                        Checked="ControllerSelection_Checked"
+                                        Unchecked="ControllerSelection_UnChecked" />
                                 </DataTemplate>
                             </ListView.ItemTemplate>
                         </ListView>

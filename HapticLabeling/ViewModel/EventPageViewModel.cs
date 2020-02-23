@@ -100,39 +100,6 @@ namespace HapticLabeling.ViewModel
             AudioPlayer.CommandManager.IsEnabled = false;
             AudioPlayer.TimelineController = MediaTimelineController;
 
-            Controllers.Clear();
-            // InitControllerSelections();
-        }
-
-        public void InitControllerSelections()
-        {
-            string[] controllers = {
-                "Left_Motor",
-                "Right_Motor",
-                "DPAD_Up",
-                "DPAD_Down",
-                "DPAD_Left",
-                "DPAD_Right",
-                "Left_Thumb",
-                "Right_Thumb",
-                "Left_Shoulder",
-                "Right_Shoulder",
-                "A",
-                "B",
-                "X",
-                "Y",
-                "LeftTrigger",
-                "RightTrigger",
-                "LeftThumbX",
-                "LeftThumbY",
-                "RightThumbX",
-                "RightThumbY"
-            };
-
-            foreach(string i in controllers)
-            {
-                Controllers.Add(new ControllerSelection() { Name = i });
-            }
         }
 
         public async Task UploadVideo()
@@ -352,6 +319,14 @@ namespace HapticLabeling.ViewModel
             {
                 Controllers = null;
             }
+        }
+
+        public void RefreshSelectionUI()
+        {
+            if (Controllers == null || Controllers.Count == 0) return;
+            var currentList = Controllers;
+
+            Controllers = new ObservableCollection<ControllerSelection>(currentList);
         }
     }
 }

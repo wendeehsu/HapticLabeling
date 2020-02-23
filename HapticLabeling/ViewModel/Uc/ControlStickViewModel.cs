@@ -1,10 +1,5 @@
 ﻿using HapticLabeling.Model;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HapticLabeling.ViewModel.Uc
 {
@@ -182,54 +177,54 @@ namespace HapticLabeling.ViewModel.Uc
 
         public void UpdateDisplay(ObservableCollection<ControllerSelection> list)
         {
-            if (list == null || list.Count == 0) 
-            {
-                Reset();
-                return;
-            }
+            Reset();
+            if (list == null || list.Count == 0) return;
             else
             {
                 foreach (var i in list)
                 {
-                    if (i.Name == "Left_Motor") { LeftMotorValue = i.Value; }
-                    if (i.Name == "Right_Motor") { RightMotorValue = i.Value; }
-                    if (i.Name == "DPAD_Up") { ShowDPAD_Up = true; }
-                    if (i.Name == "DPAD_Down") { ShowDPAD_Down = true; }
-                    if (i.Name == "DPAD_Left") { ShowDPAD_Left = true; }
-                    if (i.Name == "DPAD_Right") { ShowDPAD_Right = true; }
-                    if (i.Name == "Left_Thumb") { ShowLeft_Thumb = true; }
-                    if (i.Name == "Right_Thumb") { ShowRight_Thumb = true; }
-                    if (i.Name == "Left_Shoulder") { ShowLeft_Shoulder = true; }
-                    if (i.Name == "Right_Shoulder") { ShowRight_Shoulder = true; }
-                    if (i.Name == "A") { ShowA = true; }
-                    if (i.Name == "B") { ShowB = true; }
-                    if (i.Name == "X") { ShowX = true; }
-                    if (i.Name == "Y") { ShowY = true; }
-                    if (i.Name == "LeftTrigger") { ShowLeftTrigger = true; }
-                    if (i.Name == "RightTrigger") { ShowRightTrigger = true; }
-
-                    if (i.Name == "LeftThumbX")
+                    if (i.IsChecked)
                     {
-                        ShowLeftThumbXp = i.Value > 0;
-                        ShowLeftThumbXn = i.Value < 0;
-                    }
+                        if (i.Name == "Left_Motor") { LeftMotorValue = i.Value; }
+                        if (i.Name == "Right_Motor") { RightMotorValue = i.Value; }
+                        if (i.Name == "DPAD_Up") { ShowDPAD_Up = true; }
+                        if (i.Name == "DPAD_Down") { ShowDPAD_Down = true; }
+                        if (i.Name == "DPAD_Left") { ShowDPAD_Left = true; }
+                        if (i.Name == "DPAD_Right") { ShowDPAD_Right = true; }
+                        if (i.Name == "Left_Thumb") { ShowLeft_Thumb = true; }
+                        if (i.Name == "Right_Thumb") { ShowRight_Thumb = true; }
+                        if (i.Name == "Left_Shoulder") { ShowLeft_Shoulder = true; }
+                        if (i.Name == "Right_Shoulder") { ShowRight_Shoulder = true; }
+                        if (i.Name == "A") { ShowA = true; }
+                        if (i.Name == "B") { ShowB = true; }
+                        if (i.Name == "X") { ShowX = true; }
+                        if (i.Name == "Y") { ShowY = true; }
+                        if (i.Name == "LeftTrigger") { ShowLeftTrigger = true; }
+                        if (i.Name == "RightTrigger") { ShowRightTrigger = true; }
 
-                    if (i.Name == "LeftThumbY")
-                    {
-                        ShowLeftThumbYp = i.Value > 0;
-                        ShowLeftThumbYn = i.Value < 0;
-                    }
+                        if (i.Name == "LeftThumbX")
+                        {
+                            ShowLeftThumbXp = i.Value > 0;
+                            ShowLeftThumbXn = i.Value < 0;
+                        }
 
-                    if (i.Name == "RightThumbX")
-                    {
-                        ShowRightThumbXp = i.Value > 0;
-                        ShowRightThumbXn = i.Value < 0;
-                    }
+                        if (i.Name == "LeftThumbY")
+                        {
+                            ShowLeftThumbYp = i.Value > 0;
+                            ShowLeftThumbYn = i.Value < 0;
+                        }
 
-                    if (i.Name == "RightThumbY")
-                    {
-                        ShowRightThumbYp = i.Value > 0;
-                        ShowRightThumbYn = i.Value < 0;
+                        if (i.Name == "RightThumbX")
+                        {
+                            ShowRightThumbXp = i.Value > 0;
+                            ShowRightThumbXn = i.Value < 0;
+                        }
+
+                        if (i.Name == "RightThumbY")
+                        {
+                            ShowRightThumbYp = i.Value > 0;
+                            ShowRightThumbYn = i.Value < 0;
+                        }
                     }
                 }
             }

@@ -3,6 +3,7 @@ using HapticLabeling.View;
 using HapticLabeling.ViewModel;
 using System;
 using System.Diagnostics;
+using System.Linq;
 using Windows.Media;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -202,6 +203,34 @@ namespace HapticLabeling.View
             catch(Exception ex)
             {
                 Debug.WriteLine(ex.Message);
+            }
+        }
+
+        private void ControllerSelection_Checked(object sender, RoutedEventArgs e)
+        {
+            if (sender is CheckBox checkBox &&
+                checkBox.DataContext is ControllerSelection cs)
+            {
+                var controller = ViewModel.Controllers.First(c => c.Name == cs.Name);
+                if (controller != null && controller.IsChecked != true)
+                {
+                    cs.IsChecked = true;
+                    ViewModel.RefreshSelectionUI();
+                }
+            }
+        }
+
+        private void ControllerSelection_UnChecked(object sender, RoutedEventArgs e)
+        {
+            if (sender is CheckBox checkBox &&
+                checkBox.DataContext is ControllerSelection cs)
+            {
+                var controller = ViewModel.Controllers.First(c => c.Name == cs.Name);
+                if (controller != null && controller.IsChecked != false)
+                {
+                    cs.IsChecked = false;
+                    ViewModel.RefreshSelectionUI();
+                }
             }
         }
     }
