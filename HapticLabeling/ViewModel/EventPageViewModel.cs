@@ -326,9 +326,7 @@ namespace HapticLabeling.ViewModel
             }
         }
 
-
         private double _prevTime = 0;
-
         public void UpdateSelection(double timestamp)
         {
             double tolerence = 200;
@@ -339,8 +337,7 @@ namespace HapticLabeling.ViewModel
                 {
                     if (Math.Abs(e.TimeStamp - timestamp) <= tolerence)
                     {
-                        var newList = e.GetActiveProperty();
-                        Controllers = newList;
+                        Controllers = new ObservableCollection<ControllerSelection>(e.GetActiveProperty());
                         _prevTime = timestamp;
                         return;
                     }
@@ -351,9 +348,9 @@ namespace HapticLabeling.ViewModel
                 }
             }
             
-            if (timestamp - _prevTime > tolerence)
+            if (Math.Abs(timestamp - _prevTime) > tolerence)
             {
-                Controllers.Clear();
+                Controllers = null;
             }
         }
     }

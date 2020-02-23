@@ -2,6 +2,9 @@
     x:Class="HapticLabeling.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:HapticLabeling">
-
+    xmlns:local="using:HapticLabeling"
+    xmlns:model="using:HapticLabeling.Model">
+    <Application.Resources>
+        <model:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+    </Application.Resources>
 </Application>

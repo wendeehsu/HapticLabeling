@@ -16,5 +16,6 @@ namespace HapticLabeling.Model
         }
 
         public string Name;
+        public double Value;
     }
 }

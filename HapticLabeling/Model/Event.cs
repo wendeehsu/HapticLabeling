@@ -41,7 +41,8 @@ namespace HapticLabeling.Model
                 list.Add(new ControllerSelection() 
                 { 
                     Name = "Left_Motor", 
-                    IsChecked = true 
+                    IsChecked = true ,
+                    Value = Left_Motor
                 }); 
             };
             if (Right_Motor > 0)
@@ -49,7 +50,8 @@ namespace HapticLabeling.Model
                 list.Add(new ControllerSelection()
                 {
                     Name = "Right_Motor",
-                    IsChecked = true
+                    IsChecked = true,
+                    Value = Right_Motor
                 });
             };
             if (DPAD_Up)
@@ -169,7 +171,8 @@ namespace HapticLabeling.Model
                 list.Add(new ControllerSelection()
                 {
                     Name = "LeftThumbX",
-                    IsChecked = true
+                    IsChecked = true,
+                    Value = LeftThumbX
                 });
             };
             if (LeftThumbY != 0)
@@ -177,7 +180,8 @@ namespace HapticLabeling.Model
                 list.Add(new ControllerSelection()
                 {
                     Name = "LeftThumbY",
-                    IsChecked = true
+                    IsChecked = true,
+                    Value = LeftThumbY
                 });
             };
             if (RightThumbX != 0)
@@ -185,7 +189,8 @@ namespace HapticLabeling.Model
                 list.Add(new ControllerSelection()
                 {
                     Name = "RightThumbX",
-                    IsChecked = true
+                    IsChecked = true,
+                    Value = RightThumbX
                 });
             };
             if (RightThumbY != 0)
@@ -193,7 +198,8 @@ namespace HapticLabeling.Model
                 list.Add(new ControllerSelection()
                 {
                     Name = "RightThumbY",
-                    IsChecked = true
+                    IsChecked = true,
+                    Value = RightThumbY
                 });
             };
 

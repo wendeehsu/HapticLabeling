@@ -7,6 +7,26 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
     <UserControl.Resources>
+        <Style x:Key="MotorRect" TargetType="Rectangle">
+            <Setter Property="Width" Value="10" />
+            <Setter Property="MaxHeight" Value="110" />
+            <Setter Property="VerticalAlignment" Value="Bottom" />
+        </Style>
+        <Style x:Key="buttonRectangle" TargetType="Rectangle">
+            <Setter Property="Width" Value="8" />
+            <Setter Property="Height" Value="10" />
+            <Setter Property="Fill" Value="Yellow" />
+        </Style>
+        <Style x:Key="ThumbEllipse" TargetType="Ellipse">
+            <Setter Property="Width" Value="32" />
+            <Setter Property="Height" Value="32" />
+            <Setter Property="Stroke" Value="LightGreen" />
+            <Setter Property="StrokeThickness" Value="5" />
+        </Style>
+        <Style x:Key="ButtonEllipse" TargetType="Ellipse">
+            <Setter Property="Width" Value="15" />
+            <Setter Property="Height" Value="15" />
+        </Style>
         <Style x:Key="ArrowImg" TargetType="Image">
             <Setter Property="Width" Value="30" />
             <Setter Property="VerticalAlignment" Value="Top" />
@@ -34,88 +54,93 @@
             Source="/Assets/left-arrow.png"
             HorizontalAlignment="Left"
             Style="{StaticResource ArrowImg}"
-            Margin="0,50" />
+            Margin="0,50"
+            Visibility="{x:Bind ViewModel.ShowLeftTrigger, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}"/>
         <Image
             x:Name="rightTrigger"
             Source="/Assets/right-arrow.png"
             HorizontalAlignment="Right"
             Style="{StaticResource ArrowImg}"
-            Margin="0,50" />
+            Margin="0,50"
+            Visibility="{x:Bind ViewModel.ShowRightTrigger, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" />
         <Image
             x:Name="leftShoulder"
             Source="/Assets/down-arrow.png"
             HorizontalAlignment="Left"
             Style="{StaticResource ArrowImg}"
-            Margin="50,0" />
+            Margin="50,0"
+            Visibility="{x:Bind ViewModel.ShowLeft_Shoulder, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" />
         <Image
             x:Name="rightShoulder"
             Source="/Assets/down-arrow.png"
             HorizontalAlignment="Right"
             Style="{StaticResource ArrowImg}"
-            Margin="50,0" />
+            Margin="50,0"
+            Visibility="{x:Bind ViewModel.ShowRight_Shoulder, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}"/>
         <Image
             x:Name="leftMushroonUp"
             Source="/Assets/up-circle.png"
             Style="{StaticResource HalfCircleUpDown}"
-            Visibility="Collapsed"
-            Margin="66,62" />
+            Margin="66,62"
+            Visibility="{x:Bind ViewModel.ShowLeftThumbYp, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}"/>
         <Image
             x:Name="leftMushroonDown"
             Source="/Assets/down-circle.png"
             Style="{StaticResource HalfCircleUpDown}"
-            Visibility="Collapsed"
-            Margin="66,71" />
+            Margin="66,71"
+            Visibility="{x:Bind ViewModel.ShowLeftThumbYn, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}"/>
         <Image
             x:Name="leftMushroonLeft"
             Source="/Assets/left-circle.png"
             Style="{StaticResource HalfCircleLeftRight}"
-            Visibility="Collapsed"
-            Margin="66,62" />
+            Margin="66,62"
+            Visibility="{x:Bind ViewModel.ShowLeftThumbXn, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}"/>
         <Image
             x:Name="leftMushroonRight"
             Source="/Assets/right-circle.png"
             Style="{StaticResource HalfCircleLeftRight}"
-            Visibility="Collapsed"
-            Margin="75,62" />
+            Margin="75,62"
+            Visibility="{x:Bind ViewModel.ShowLeftThumbXp, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}"/>
         <Image
             x:Name="rightMushroonUp"
             Source="/Assets/up-circle.png"
             HorizontalAlignment="Right"
             Width="17"
             VerticalAlignment="Top"
-            Visibility="Collapsed"
-            Margin="90,93" />
+            Margin="90,93"
+            Visibility="{x:Bind ViewModel.ShowRightThumbYp, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}"/>
         <Image
             x:Name="rightMushroonDown"
             Source="/Assets/down-circle.png"
             HorizontalAlignment="Right"
             Width="17"
-            Visibility="Collapsed"
             VerticalAlignment="Bottom"
-            Margin="90,89"/>
+            Margin="90,89"
+            Visibility="{x:Bind ViewModel.ShowRightThumbYn, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}"/>
         <Image
             x:Name="rightMushroonLeft"
             Source="/Assets/left-circle.png"
             HorizontalAlignment="Right"
             Height="17"
             VerticalAlignment="Bottom"
-            Visibility="Collapsed"
-            Margin="98,90" />
+            Margin="98,90"
+            Visibility="{x:Bind ViewModel.ShowRightThumbXn, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}"/>
         <Image
             x:Name="rightMushroonRight"
             Source="/Assets/right-circle.png"
             HorizontalAlignment="Right"
             Height="17"
             VerticalAlignment="Bottom"
-            Margin="90,90" />
+            Margin="90,90"
+            Visibility="{x:Bind ViewModel.ShowRightThumbXp, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}"/>
         <Grid
             x:Name="ButtonY"
-            Margin="112,102"
+            Margin="66,48"
             VerticalAlignment="Top"
-            HorizontalAlignment="Right">
+            HorizontalAlignment="Right"
+            Visibility="{x:Bind ViewModel.ShowY, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
             <Ellipse
-                Width="20"
-                Height="20"
+                Style="{StaticResource ButtonEllipse}"
                 Fill="Yellow" />
             <TextBlock
                 Text="Y"
@@ -125,12 +150,12 @@
         </Grid>
         <Grid
             x:Name="ButtonA"
-            Margin="113,143"
+            Margin="66,76"
             VerticalAlignment="Top"
-            HorizontalAlignment="Right">
+            HorizontalAlignment="Right"
+            Visibility="{x:Bind ViewModel.ShowA, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
             <Ellipse
-                Width="20"
-                Height="20"
+                Style="{StaticResource ButtonEllipse}"
                 Fill="YellowGreen" />
             <TextBlock
                 Text="A"
@@ -140,12 +165,12 @@
         </Grid>
         <Grid
             x:Name="ButtonX"
-            Margin="132,122"
+            Margin="52,62"
             VerticalAlignment="Top"
-            HorizontalAlignment="Right">
+            HorizontalAlignment="Right"
+            Visibility="{x:Bind ViewModel.ShowX, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
             <Ellipse
-                Width="20"
-                Height="20"
+                Style="{StaticResource ButtonEllipse}"
                 Fill="CadetBlue" />
             <TextBlock
                 Text="X"
@@ -155,12 +180,12 @@
         </Grid>
         <Grid
             x:Name="ButtonB"
-            Margin="91,122"
+            Margin="79,62"
             VerticalAlignment="Top"
-            HorizontalAlignment="Right">
+            HorizontalAlignment="Right"
+            Visibility="{x:Bind ViewModel.ShowB, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
             <Ellipse
-                Width="20"
-                Height="20"
+                Style="{StaticResource ButtonEllipse}"
                 Fill="Red" />
             <TextBlock
                 Text="B"
@@ -169,52 +194,56 @@
                 Foreground="White"/>
         </Grid>
         <Ellipse
-            Stroke="LightGreen"
-            StrokeThickness="6"
-            Width="48"
-            Height="48"
-            Margin="100,107"
+            Style="{StaticResource ThumbEllipse}"
+            Margin="58,54"
             HorizontalAlignment="Left"
-            VerticalAlignment="Top"/>
+            VerticalAlignment="Top"
+            Visibility="{x:Bind ViewModel.ShowLeft_Thumb, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}"/>
         <Ellipse
-            Stroke="LightGreen"
-            StrokeThickness="6"
-            Width="48"
-            Height="48"
-            Margin="136,148"
+            Style="{StaticResource ThumbEllipse}"
+            Margin="83,82"
             HorizontalAlignment="Right"
-            VerticalAlignment="Bottom"/>
+            VerticalAlignment="Bottom"
+            Visibility="{x:Bind ViewModel.ShowRight_Thumb, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}"/>
         <Rectangle
             x:Name="drapUp"
-            Width="13"
-            Height="15"
-            Fill="Yellow"
-            Margin="156,160"
+            Style="{StaticResource buttonRectangle}"
+            Margin="96,90"
             HorizontalAlignment="Left"
-            VerticalAlignment="Top"/>
+            VerticalAlignment="Top"
+            Visibility="{x:Bind ViewModel.ShowDPAD_Up, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}"/>
         <Rectangle
             x:Name="drapLeft"
-            Width="15"
-            Height="13"
-            Fill="Yellow"
-            Margin="142,162"
+            Style="{StaticResource buttonRectangle}"
+            Margin="86,91"
             HorizontalAlignment="Left"
-            VerticalAlignment="Bottom"/>
+            VerticalAlignment="Bottom"
+            Visibility="{x:Bind ViewModel.ShowDPAD_Left, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}"/>
         <Rectangle
             x:Name="drapDown"
-            Width="13"
-            Height="15"
-            Fill="Yellow"
-            Margin="156,150"
+            Style="{StaticResource buttonRectangle}"
+            Margin="96,83"
             HorizontalAlignment="Left"
-            VerticalAlignment="Bottom"/>
+            VerticalAlignment="Bottom"
+            Visibility="{x:Bind ViewModel.ShowDPAD_Down, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}"/>
         <Rectangle
             x:Name="drapRight"
-            Width="15"
-            Height="13"
-            Fill="Yellow"
-            Margin="165,162"
+            Style="{StaticResource buttonRectangle}"
+            Margin="105,91"
             HorizontalAlignment="Left"
-            VerticalAlignment="Bottom"/>
+            VerticalAlignment="Bottom"
+            Visibility="{x:Bind ViewModel.ShowDPAD_Right, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}"/>
+        <Rectangle
+            x:Name="LeftMotor"
+            Height="{x:Bind ViewModel.LeftMotorValue, Mode=OneWay}"
+            Fill="Aqua"
+            Style="{StaticResource MotorRect}"
+            HorizontalAlignment="Left" />
+        <Rectangle
+            x:Name="RightMotor"
+            Height="{x:Bind ViewModel.RightMotorValue, Mode=OneWay}"
+            Fill="LightGreen"
+            Style="{StaticResource MotorRect}"
+            HorizontalAlignment="Right" />
     </Grid>
 </UserControl>
