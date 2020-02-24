@@ -18,11 +18,19 @@ namespace HapticLabeling.ViewModel
     {
         public int CurrentIndex = -1;
         public List<Event> Events = new List<Event>();
+        public List<BoundingBox> Boxes = new List<BoundingBox>();
         public List<HapticEvent> HapticEvents = new List<HapticEvent>();
         public ObservableCollection<ControllerSelection> ConfigBoxes = new ObservableCollection<ControllerSelection>();
         public MediaPlayer VideoPlayer = new MediaPlayer();
         public MediaPlayer AudioPlayer = new MediaPlayer();
         public MediaTimelineController MediaTimelineController = null;
+
+        private double _configViewHeight;
+        public double ConfigViewHeight
+        {
+            get => _configViewHeight;
+            set => Set(ref _configViewHeight, value);
+        }
 
         private double _mediaLength;
         public double MediaLength
@@ -82,6 +90,13 @@ namespace HapticLabeling.ViewModel
         {
             get => _enableEvents;
             set => Set(ref _enableEvents, value);
+        }
+
+        private bool _enableConfig = true;
+        public bool EnableConfig
+        {
+            get => _enableConfig;
+            set => Set(ref _enableConfig, value);
         }
 
         public ObservableCollection<ControllerSelection> _controllers = new ObservableCollection<ControllerSelection>();
@@ -169,7 +184,15 @@ namespace HapticLabeling.ViewModel
             }
         }
 
-        public async Task UploadConfig()
+        public void SetConfigViewHeight(JsonBox rangeBox, double width)
+        {
+            if (rangeBox != null)
+            {
+                ConfigViewHeight = width * rangeBox.Height / rangeBox.Width;
+            }
+        }
+
+        public async Task UploadConfig(double width)
         {
             var openPicker = new FileOpenPicker
             {
@@ -179,12 +202,15 @@ namespace HapticLabeling.ViewModel
             openPicker.FileTypeFilter.Add(".json");
 
             var file = await openPicker.PickSingleFileAsync();
-            if (!(file is null))
+            if (file != null)
             {
                 string text = await FileIO.ReadTextAsync(file);
                 var boxes = JsonConvert.DeserializeObject<List<JsonBox>>(text);
 
-                // TODO: change "boxes" to listview and grid
+                SetConfigViewHeight(boxes[0], width);
+                boxes.RemoveAt(0);
+                Boxes = GetBoxes(width, boxes);
+
                 foreach(var box in boxes)
                 {
                     if (box.Width > 0)
@@ -195,12 +221,22 @@ namespace HapticLabeling.ViewModel
                         });
                     }
                 }
-
-                foreach(var config in ConfigBoxes)
-                {
-                    config.IsChecked = true;
-                }
             }
+        }
+
+        public List<BoundingBox> GetBoxes(double width, List<JsonBox> jsonBoxes)
+        {
+            var boundingBoxes = new List<BoundingBox>();
+            foreach (var box in jsonBoxes)
+            {
+                var boundingBox = new BoundingBox(box.X * width / 100, box.Y * ConfigViewHeight / 100);
+                boundingBox.Height = box.Height * ConfigViewHeight / 100;
+                boundingBox.Width = box.Width * width / 100;
+                boundingBox.Name = box.Name;
+                boundingBoxes.Add(boundingBox);
+            }
+
+            return boundingBoxes;
         }
 
         public void PlayMedia()

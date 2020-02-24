@@ -20,7 +20,6 @@ namespace HapticLabeling.View.Uc
                     x.Width = value.X;
                     y.Height = value.Y;
                 }
-                // https://stackoverflow.com/questions/46579562/uwp-create-dynamic-rectangle
             }
         }
 

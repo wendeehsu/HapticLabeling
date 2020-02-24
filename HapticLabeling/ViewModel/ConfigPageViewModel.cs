@@ -80,7 +80,6 @@ namespace HapticLabeling.ViewModel
             };
             openPicker.FileTypeFilter.Add(".mp4");
             openPicker.FileTypeFilter.Add(".mov");
-            openPicker.FileTypeFilter.Add(".wmv");
 
             var file = await openPicker.PickSingleFileAsync();
             if (file != null)
@@ -105,6 +104,7 @@ namespace HapticLabeling.ViewModel
                 SuggestedStartLocation = PickerLocationId.PicturesLibrary
             };
             openPicker.FileTypeFilter.Add(".mp3");
+            openPicker.FileTypeFilter.Add(".wmv");
 
             var file = await openPicker.PickSingleFileAsync();
             if (file != null)
@@ -188,17 +188,25 @@ namespace HapticLabeling.ViewModel
         public async Task DownloadConfigBox()
         {
             var result = new List<JsonBox>();
-            for(var i = 0; i < Boxes.Count; i ++)
+            for (var i = 0; i < Boxes.Count; i++)
             {
-                result.Add(new JsonBox
-                (
-                    GetX(Boxes[i].X), 
-                    GetY(Boxes[i].Y), 
-                    GetWidth(Boxes[i].Width), 
-                    GetHeight(Boxes[i].Height), 
-                    Boxes[i].Name
-                ));
+                if (Boxes[i].Width > 0 && Boxes[i].Height > 0)
+                {
+                    result.Add(new JsonBox
+                    (
+                        GetX(Boxes[i].X),
+                        GetY(Boxes[i].Y),
+                        GetWidth(Boxes[i].Width),
+                        GetHeight(Boxes[i].Height),
+                        Boxes[i].Name
+                    ));
+                }
             }
+            
+            // insert config
+            result.Insert(0, new JsonBox(
+                RangeBox.X, RangeBox.Y, RangeBox.Width, RangeBox.Height, "RangeBox"));
+
             var json = JsonConvert.SerializeObject(result);
             var savePicker = new FileSavePicker();
             savePicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;

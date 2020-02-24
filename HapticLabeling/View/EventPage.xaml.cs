@@ -1,5 +1,6 @@
 ﻿using HapticLabeling.Model;
 using HapticLabeling.View;
+using HapticLabeling.View.Uc;
 using HapticLabeling.ViewModel;
 using System;
 using System.Diagnostics;
@@ -53,7 +54,14 @@ namespace HapticLabeling.View
 
         private async void UploadAction_Click(object sender, RoutedEventArgs e)
         {
-            await ViewModel.UploadAction();
+            try
+            {
+                await ViewModel.UploadAction();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
         }
 
         private void Slider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
@@ -198,9 +206,16 @@ namespace HapticLabeling.View
         {
             try
             {
-                await ViewModel.UploadConfig();
+                await ViewModel.UploadConfig(BoxGridView.ActualWidth);
+                foreach (var box in ViewModel.Boxes)
+                {
+                    var boxView = new BoxView();
+                    boxView.BoundingBox = box;
+                    boxView.SetSize(box.Width, box.Height);
+                    BoxGridView.Children.Add(boxView);
+                }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
             }
@@ -230,6 +245,50 @@ namespace HapticLabeling.View
                 {
                     cs.IsChecked = false;
                     ViewModel.RefreshSelectionUI();
+                }
+            }
+        }
+
+        private void ConfigBox_Checked(object sender, RoutedEventArgs e)
+        {
+            if (sender is CheckBox checkBox &&
+               checkBox.DataContext is ControllerSelection cs)
+            {
+                var controller = ViewModel.ConfigBoxes.First(c => c.Name == cs.Name);
+                if (controller != null && controller.IsChecked != true)
+                {
+                    cs.IsChecked = true;
+                    foreach (var childBox in BoxGridView.Children)
+                    {
+                        if (childBox is BoxView childBoxView &&
+                            childBoxView.BoundingBox.Name == cs.Name)
+                        {
+                            childBoxView.Visibility = Visibility.Visible;
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void ConfigBox_UnChecked(object sender, RoutedEventArgs e)
+        {
+            if (sender is CheckBox checkBox &&
+               checkBox.DataContext is ControllerSelection cs)
+            {
+                var controller = ViewModel.ConfigBoxes.First(c => c.Name == cs.Name);
+                if (controller != null && controller.IsChecked != false)
+                {
+                    cs.IsChecked = false;
+                    foreach (var childBox in BoxGridView.Children)
+                    {
+                        if (childBox is BoxView childBoxView &&
+                            childBoxView.BoundingBox.Name == cs.Name)
+                        {
+                            childBoxView.Visibility = Visibility.Collapsed;
+                            return;
+                        }
+                    }
                 }
             }
         }
