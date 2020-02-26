@@ -11,6 +11,8 @@ namespace HapticLabeling.Model
         public double StartTime;
         public double Duration;
         public string Name;
+        public List<JsonBox> ConfigBoxes;
+        public List<Event> ControllerEvents;
 
         public JsonHapticLabel(double _startTime, double _duration, string _name)
         {

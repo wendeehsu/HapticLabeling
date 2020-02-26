@@ -213,10 +213,6 @@ namespace HapticLabeling.View
 
         private async void Download_Click(object sender, RoutedEventArgs e)
         {
-            // TODO: 
-            // 1. new controller.json
-            // 2. config file with respect to time
-            // 3. label files
             await ViewModel.DownloadLabeledEvent();
         }
 
@@ -248,6 +244,7 @@ namespace HapticLabeling.View
                 if (controller != null && controller.IsChecked != true)
                 {
                     cs.IsChecked = true;
+                    ViewModel.UpdateControllerEvent(cs);
                     ViewModel.RefreshSelectionUI();
                 }
             }
@@ -262,6 +259,7 @@ namespace HapticLabeling.View
                 if (controller != null && controller.IsChecked != false)
                 {
                     cs.IsChecked = false;
+                    ViewModel.UpdateControllerEvent(cs);
                     ViewModel.RefreshSelectionUI();
                 }
             }

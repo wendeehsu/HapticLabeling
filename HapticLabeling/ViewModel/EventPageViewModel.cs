@@ -18,6 +18,9 @@ namespace HapticLabeling.ViewModel
     public class EventPageViewModel : Observable
     {
         public int CurrentIndex = -1;
+        public int CurrentControllerIndex = -1;
+        private List<Event> _events = new List<Event>();
+        private List<JsonBox> _jsonBox = new List<JsonBox>();
         public List<Event> Events = new List<Event>();
         public List<BoundingBox> Boxes = new List<BoundingBox>();
         public List<HapticEvent> HapticEvents = new List<HapticEvent>();
@@ -31,7 +34,6 @@ namespace HapticLabeling.ViewModel
             get => _configBoxes;
             set => Set(ref _configBoxes, value);
         }
-
 
         private double _configViewHeight;
         public double ConfigViewHeight
@@ -195,6 +197,7 @@ namespace HapticLabeling.ViewModel
             if(file != null)
             {
                 string text = await FileIO.ReadTextAsync(file);
+                _events = JsonConvert.DeserializeObject<List<Event>>(text);
                 Events = JsonConvert.DeserializeObject<List<Event>>(text);
             }
         }
@@ -224,6 +227,7 @@ namespace HapticLabeling.ViewModel
 
                 SetConfigViewHeight(boxes[0], width);
                 boxes.RemoveAt(0);
+                _jsonBox = boxes;
                 Boxes = GetBoxes(width, boxes);
 
                 foreach(var box in boxes)
@@ -334,14 +338,29 @@ namespace HapticLabeling.ViewModel
             var result = new List<JsonHapticLabel>();
             for (var i = 0; i < HapticEvents.Count; i++)
             {
-                result.Add(new JsonHapticLabel(
-                    HapticEvents[i].StartTime, 
-                    HapticEvents[i].Duration, 
+                var hapticEvent = new JsonHapticLabel(
+                    HapticEvents[i].StartTime,
+                    HapticEvents[i].Duration,
                     HapticEvents[i].Name
-                ));
+                );
+                hapticEvent.ConfigBoxes = GetJsonBoxes(HapticEvents[i].GetConfigBoxes());
+                hapticEvent.ControllerEvents = GetControllerEvents(HapticEvents[i].StartTime, HapticEvents[i].Duration);
+                result.Add(hapticEvent);
             }
+
             var json = JsonConvert.SerializeObject(result);
-            await SaveJson(json, "hapticLabel");
+            var savePicker = new FileSavePicker();
+            savePicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
+            savePicker.FileTypeChoices.Add("Plain Text", new List<string>() { ".json" });
+            savePicker.SuggestedFileName = DateTime.Now.ToString("HHmmss_MMdd") + "_hapticLabel";
+            StorageFile file = await savePicker.PickSaveFileAsync();
+            if (file != null)
+            {
+                CachedFileManager.DeferUpdates(file);
+                await FileIO.WriteTextAsync(file, json);
+                Windows.Storage.Provider.FileUpdateStatus status =
+                    await CachedFileManager.CompleteUpdatesAsync(file);
+            }
         }
 
         public async Task SaveJson(string json, string filename)
@@ -365,13 +384,15 @@ namespace HapticLabeling.ViewModel
         {
             double tolerence = 200;
 
-            foreach (var e in Events)
+            for (var i = 0; i < Events.Count; i++)
             {
+                var e = Events[i];
                 if (e.TimeStamp <= timestamp)
                 {
                     if (Math.Abs(e.TimeStamp - timestamp) <= tolerence)
                     {
                         Controllers = new ObservableCollection<ControllerSelection>(e.GetActiveProperty());
+                        CurrentControllerIndex = i;
                         _prevTime = timestamp;
                         return;
                     }
@@ -385,6 +406,7 @@ namespace HapticLabeling.ViewModel
             if (Math.Abs(timestamp - _prevTime) > tolerence)
             {
                 Controllers = null;
+                CurrentControllerIndex = -1;
             }
         }
 
@@ -407,6 +429,44 @@ namespace HapticLabeling.ViewModel
             {
                 box.IsChecked = true;
             }
+        }
+
+        public void UpdateControllerEvent(ControllerSelection cs)
+        {
+            Events[CurrentControllerIndex].UpdateValue(cs, _events[CurrentControllerIndex]);
+        }
+
+        public List<JsonBox> GetJsonBoxes(List<ControllerSelection> boxes)
+        {
+            var jsonBoxes = new List<JsonBox>();
+            foreach (var box in boxes)
+            {
+                if (box.IsChecked)
+                {
+                    var jsonBox = _jsonBox.Find(b => b.Name == box.Name);
+                    if (jsonBox != null) 
+                    { 
+                        jsonBoxes.Add(jsonBox); 
+                    }
+                }
+            }
+
+            return jsonBoxes;
+        }
+
+        public List<Event> GetControllerEvents(double timestamp, double duration)
+        {
+            var controllers = new List<Event>();
+            for (var i = 0; i < Events.Count; i++)
+            {
+                var e = Events[i];
+                if (e.TimeStamp >= timestamp && e.TimeStamp <= (timestamp + duration))
+                {
+                    controllers.Add(e);
+                }
+            }
+
+            return controllers;
         }
     }
 }
