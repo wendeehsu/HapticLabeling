@@ -104,6 +104,9 @@ namespace HapticLabeling.View
 
         private void Label_Tapped(object sender, TappedRoutedEventArgs e)
         {
+            ViewModel.ResetConfigBoxCheckMode();
+            RefreshBoxVisibility();
+
             var label = sender as HapticLabelMark;
             var position = Window.Current.CoreWindow.PointerPosition;
             var x = position.X - Window.Current.Bounds.X - 70;
@@ -122,14 +125,11 @@ namespace HapticLabeling.View
             DurationTextBlock.Text = hapticEvent.Duration.ToString();
             NameTextBox.Text = hapticEvent.Name.ToString();
 
-            if (hapticEvent.RelatedConfigs != null && hapticEvent.RelatedConfigs.Count > 0)
+            if (!string.IsNullOrEmpty(hapticEvent.RelatedConfigs))
             {
-                ViewModel.ConfigBoxes = new ObservableCollection<ControllerSelection>(hapticEvent.RelatedConfigs);
+                ViewModel.ConfigBoxes = new ObservableCollection<ControllerSelection>(hapticEvent.GetConfigBoxes());
             }
-            else
-            {
-                ViewModel.ResetConfigBoxCheckMode();
-            }
+
             RefreshBoxVisibility();
         }
 

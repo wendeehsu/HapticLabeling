@@ -20,8 +20,8 @@ namespace HapticLabeling.Model
             StartTime = _startTime;
         }
 
-        private List<ControllerSelection> _relatedConfigs;
-        public List<ControllerSelection> RelatedConfigs
+        private string _relatedConfigs;
+        public string RelatedConfigs
         {
             get => _relatedConfigs;
             set => Set(ref _relatedConfigs, value);
@@ -29,7 +29,12 @@ namespace HapticLabeling.Model
 
         public void SetRelatedConfigs(string json)
         {
-            RelatedConfigs = JsonConvert.DeserializeObject<List<ControllerSelection>>(json);
+            RelatedConfigs = json;
+        }
+
+        public List<ControllerSelection> GetConfigBoxes()
+        {
+            return JsonConvert.DeserializeObject<List<ControllerSelection>>(RelatedConfigs);
         }
     }
 }
