@@ -3,6 +3,7 @@ using HapticLabeling.View;
 using HapticLabeling.View.Uc;
 using HapticLabeling.ViewModel;
 using System;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using Windows.Media;
@@ -84,11 +85,11 @@ namespace HapticLabeling.View
 
         private void AddInitLabel()
         {
-            if (ViewModel.VideoPlayer.PlaybackSession.Position <= TimeSpan.FromMilliseconds(50)) return;
             var label = new HapticLabelMark();
-            label.Event = new HapticEvent(PositionSlider.Value, PositionSlider.ActualWidth * PositionSlider.Value / ViewModel.MediaLength);
-            
-            var index = ViewModel.GetInsertIndex(label.Event);
+            label.EventStartTime = PositionSlider.ActualWidth * PositionSlider.Value / ViewModel.MediaLength;
+            label.AccurateStartTime = PositionSlider.Value;
+
+            var index = ViewModel.GetInsertIndex(PositionSlider.Value);
             if(index == -1)
             {
                 LabelGrid.Children.Add(label);
@@ -106,18 +107,30 @@ namespace HapticLabeling.View
             var label = sender as HapticLabelMark;
             var position = Window.Current.CoreWindow.PointerPosition;
             var x = position.X - Window.Current.Bounds.X - 70;
-            if (x <= label.Event.EventStartTime) return;
+            if (x <= label.EventStartTime) return;
 
             RemoveAllHighLights();
             label.HighLight();
             ViewModel.ShowLabelDetail = true;
-
-            var index = ViewModel.HapticEvents.IndexOf(label.Event);
+            
+            var index = ViewModel.GetIndex(label.AccurateStartTime);
             if (index == -1) return;
             ViewModel.CurrentIndex = index;
-            StartTimeTextBlock.Text = ViewModel.HapticEvents[index].StartTime.ToString();
-            DurationTextBlock.Text = ViewModel.HapticEvents[index].Duration.ToString();
-            NameTextBox.Text = ViewModel.HapticEvents[index].Name.ToString();
+
+            var hapticEvent = ViewModel.HapticEvents[index];
+            StartTimeTextBlock.Text = hapticEvent.StartTime.ToString();
+            DurationTextBlock.Text = hapticEvent.Duration.ToString();
+            NameTextBox.Text = hapticEvent.Name.ToString();
+
+            if (hapticEvent.RelatedConfigs != null && hapticEvent.RelatedConfigs.Count > 0)
+            {
+                ViewModel.ConfigBoxes = new ObservableCollection<ControllerSelection>(hapticEvent.RelatedConfigs);
+            }
+            else
+            {
+                ViewModel.ResetConfigBoxCheckMode();
+            }
+            RefreshBoxVisibility();
         }
 
         private void SetLabelDuration()
@@ -125,13 +138,14 @@ namespace HapticLabeling.View
             var index = ViewModel.CurrentIndex;
             if (index == -1) return;
             var label = LabelGrid.Children[index] as HapticLabelMark;
-            var duration = PositionSlider.Value - label.Event.StartTime;
-            LabelGrid.Children.RemoveAt(index);
+            var duration = PositionSlider.Value - label.AccurateStartTime;
             if (duration >= 0)
             {
+                ViewModel.HapticEvents[index].Duration = duration;
                 var length = PositionSlider.ActualWidth * duration / ViewModel.MediaLength;
-                label.SetDeration(PositionSlider.Value, length);
+                label.SetDeration(length);
                 label.Tapped += Label_Tapped;
+                LabelGrid.Children.RemoveAt(index);
                 LabelGrid.Children.Insert(index, label);
             }
         }
@@ -155,21 +169,24 @@ namespace HapticLabeling.View
             LabelGrid.Children.RemoveAt(index);
             ViewModel.HapticEvents.RemoveAt(index);
             ViewModel.ShowLabelDetail = false;
+            RefreshBoxVisibility();
         }
+
 
         private void SaveLabel_Click(object sender, RoutedEventArgs e)
         {
             var index = ViewModel.CurrentIndex;
             if (index == -1) return;
             ViewModel.HapticEvents[index].Name = NameTextBox.Text;
+            ViewModel.HapticEvents[index].SetRelatedConfigs(ViewModel.GetConfigBoxes());
 
             var label = LabelGrid.Children[index] as HapticLabelMark;
-            label.Event = ViewModel.HapticEvents[index];
             label.RemoveHighlight();
             LabelGrid.Children.RemoveAt(index);
             LabelGrid.Children.Insert(index, label);
 
             ViewModel.ShowLabelDetail = false;
+            RefreshBoxVisibility();
         }
 
         private void CancelLabel_Click(object sender, RoutedEventArgs e)
@@ -177,6 +194,7 @@ namespace HapticLabeling.View
             var label = LabelGrid.Children[ViewModel.CurrentIndex] as HapticLabelMark;
             label.RemoveHighlight();
             ViewModel.ShowLabelDetail = false;
+            RefreshBoxVisibility();
         }
 
         private void RemoveAllHighLights()
@@ -288,6 +306,21 @@ namespace HapticLabeling.View
                             childBoxView.Visibility = Visibility.Collapsed;
                             return;
                         }
+                    }
+                }
+            }
+        }
+
+        private void RefreshBoxVisibility()
+        {
+            foreach(var childBox in BoxGridView.Children)
+            {
+                if (childBox is BoxView childBoxView)
+                {
+                    var controller = ViewModel.ConfigBoxes.First(box => box.Name == childBoxView.BoundingBox.Name);
+                    if (controller != null)
+                    {
+                        childBoxView.Visibility = controller.IsChecked ? Visibility.Visible : Visibility.Collapsed;
                     }
                 }
             }

@@ -1,8 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HapticLabeling.Model
 {
@@ -18,26 +15,21 @@ namespace HapticLabeling.Model
             set => Set(ref _name, value);
         }
 
-        public HapticEvent(double _startTime, double _eventStartTime)
+        public HapticEvent(double _startTime)
         {
             StartTime = _startTime;
-            EventStartTime = _eventStartTime;
         }
 
-        #region UI Display
-        private double _eventStartTime;
-        public double EventStartTime
+        private List<ControllerSelection> _relatedConfigs;
+        public List<ControllerSelection> RelatedConfigs
         {
-            get => _eventStartTime;
-            set => Set(ref _eventStartTime, value);
+            get => _relatedConfigs;
+            set => Set(ref _relatedConfigs, value);
         }
 
-        private double _eventDuration;
-        public double EventDuration
+        public void SetRelatedConfigs(string json)
         {
-            get => _eventDuration;
-            set => Set(ref _eventDuration, value);
+            RelatedConfigs = JsonConvert.DeserializeObject<List<ControllerSelection>>(json);
         }
-        #endregion
     }
 }

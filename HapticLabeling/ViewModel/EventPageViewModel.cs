@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.Media;
 using Windows.Media.Core;
@@ -20,10 +21,17 @@ namespace HapticLabeling.ViewModel
         public List<Event> Events = new List<Event>();
         public List<BoundingBox> Boxes = new List<BoundingBox>();
         public List<HapticEvent> HapticEvents = new List<HapticEvent>();
-        public ObservableCollection<ControllerSelection> ConfigBoxes = new ObservableCollection<ControllerSelection>();
         public MediaPlayer VideoPlayer = new MediaPlayer();
         public MediaPlayer AudioPlayer = new MediaPlayer();
         public MediaTimelineController MediaTimelineController = null;
+
+        public ObservableCollection<ControllerSelection> _configBoxes = new ObservableCollection<ControllerSelection>();
+        public ObservableCollection<ControllerSelection> ConfigBoxes
+        {
+            get => _configBoxes;
+            set => Set(ref _configBoxes, value);
+        }
+
 
         private double _configViewHeight;
         public double ConfigViewHeight
@@ -57,7 +65,14 @@ namespace HapticLabeling.ViewModel
         public bool ShowLabelDetail
         {
             get => _showLabelDetail;
-            set => Set(ref _showLabelDetail, value);
+            set
+            {
+                Set(ref _showLabelDetail, value);
+                if (!value)
+                {
+                    ResetConfigBoxCheckMode();
+                }
+            }
         }
 
         private bool _showAddLabelBtn = true;
@@ -259,7 +274,7 @@ namespace HapticLabeling.ViewModel
             MediaTimelineController.Pause();
         }
 
-        public int GetInsertIndex(HapticEvent _event)
+        public int GetInsertIndex(double startTime)
         {
             var insertIndex = -1;
             if (HapticEvents == null || HapticEvents.Count == 0)
@@ -270,14 +285,14 @@ namespace HapticLabeling.ViewModel
             {
                 for (var i = 0; i < HapticEvents.Count; i++)
                 {
-                    if(HapticEvents[i].StartTime < _event.StartTime)
+                    if(HapticEvents[i].StartTime < startTime)
                     {
                         if(i == 0)
                         {
                             insertIndex = 0;
                             break;
                         }
-                        else if (HapticEvents[i-1].StartTime >= _event.StartTime)
+                        else if (HapticEvents[i-1].StartTime >= startTime)
                         {
                             insertIndex = i;
                             break;
@@ -286,6 +301,7 @@ namespace HapticLabeling.ViewModel
                 }
             }
 
+            var _event = new HapticEvent(startTime);
             if(insertIndex == -1)
             {
                 HapticEvents.Add(_event);
@@ -296,6 +312,21 @@ namespace HapticLabeling.ViewModel
             }
 
             return insertIndex;
+        }
+
+        public int GetIndex(double starttime)
+        {
+            var index = -1;
+            for (var i = 0; i < HapticEvents.Count; i++)
+            {
+                if (HapticEvents[i].StartTime == starttime)
+                {
+                    index = i;
+                    break;
+                }
+            }
+
+            return index;
         }
 
         public async Task DownloadLabeledEvent()
@@ -363,6 +394,19 @@ namespace HapticLabeling.ViewModel
             var currentList = Controllers;
 
             Controllers = new ObservableCollection<ControllerSelection>(currentList);
+        }
+
+        public string GetConfigBoxes()
+        {
+            return JsonConvert.SerializeObject(ConfigBoxes);
+        }
+
+        public void ResetConfigBoxCheckMode()
+        {
+            foreach(var box in ConfigBoxes)
+            {
+                box.IsChecked = true;
+            }
         }
     }
 }

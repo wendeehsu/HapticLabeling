@@ -1,51 +1,34 @@
-﻿using HapticLabeling.Helper;
-using HapticLabeling.Model;
-using HapticLabeling.ViewModel;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+﻿using HapticLabeling.Model;
 using Windows.UI;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 
 namespace HapticLabeling.View
 {
     public sealed partial class HapticLabelMark : UserControl
     {
-        public double EventStartTime;
-        public double EventDuration;
+        public double AccurateStartTime; // save the value from positionSlider
+
+        public double EventStartTime
+        {
+            get => SpaceTextBlock.Width;
+            set => SpaceTextBlock.Width = value;
+        }
+
+        public double EventDuration
+        {
+            get => DurationLine.X2;
+            set => DurationLine.X2 = value;
+        }
 
         public HapticLabelMark()
         {
             this.InitializeComponent();
         }
 
-        private HapticEvent _event;
-        public HapticEvent Event
+        public void SetDeration(double _eventDuration)
         {
-            get => _event;
-            set
-            {
-                _event = value;
-                SpaceTextBlock.Width = _event.EventStartTime;
-                DurationLine.X2 = _event.EventDuration;
-            }
-        }
-
-        public void SetDeration(double _endTime, double _eventDuration)
-        {
-            Event.Duration = _endTime - Event.StartTime;
-            Event.EventDuration = _eventDuration - 20;
-            DurationLine.X2 = Event.EventDuration;
+            DurationLine.X2 = _eventDuration - 20;
         }
 
         public void HighLight()
